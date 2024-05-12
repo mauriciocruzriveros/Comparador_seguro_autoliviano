@@ -1,4 +1,4 @@
-# Automatización de Comparación de Seguros para Corredores de Autos Livianos
+# App de Automatización de Comparación de Seguros para Corredores de Autos Livianos
 
 Esta aplicación automatiza el proceso de comparación de seguros para corredores de autos livianos, facilitando la obtención de cotizaciones de diversas empresas de seguros de manera eficiente.
 
