@@ -6,7 +6,7 @@ Esta aplicación automatiza el proceso de comparación de seguros para corredore
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/tu-repositorio.git
+   git clone https://github.com/mauriciocruzriveros/Comparador_seguro_autoliviano.git
    ```
 
 2. **Configurar credenciales de empresas de seguros:**
