@@ -8,8 +8,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from datetime import datetime
-from bs4 import BeautifulSoup
-import pandas as pd
 import traceback
 import logging
 import json
@@ -95,7 +93,7 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
     print(f"No se pudo hacer click en el elemento {elemento} después de {intentos_maximos} intentos.")
     return False  # No se pudo hacer clic después de los intentos máximos
 
-# Obtener el directorio actual (donde se encuentra el script)
+# Directorio actual Script
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
@@ -117,6 +115,7 @@ try:
         datos_content = file.read()
         datos = eval(datos_content)
         print (datos)
+
     print("_____________________________________________________________________")
  
  # Registro de información
@@ -125,19 +124,18 @@ try:
                 f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
     print(informe)
     print("_____________________________________________________________________")
- 
- # Inicio de página Renta
-    driver.maximize_window()
-    driver.get("https://sgi.rentanacional.cl")
 
  # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    # Leer el archivo JSON desde la ruta relativa
+    #.. Leer el archivo JSON desde la ruta relativa
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
-    # Acceder a los datos
+    #.. Acceder a los datos
     rut = credentials['rut_rentanacional']
     password = credentials['password_rentanacional']
+    #.. Login
+    driver.maximize_window()
+    driver.get("https://sgi.rentanacional.cl")
     
  # Rut
     rut_locator = (By.ID, "rutInput")
@@ -166,7 +164,6 @@ try:
     time.sleep(1)
     
     esperar_carga_completa(driver)
-   
     
  # Persona jurídica o natural
     label_admin_switch_locator = (By.CSS_SELECTOR, 'label[for="adminSwitchContratante"]')
@@ -295,6 +292,7 @@ try:
             modelo_select_element = esperar_elemento(driver, modelo_select_locator, 1)
             select_modelo = Select(elemento_barra_modelo)
             opciones_modelo = [opcion.text for opcion in select_modelo.options]
+
  # Lista de modelos
             print("Opciones de la barra desplegable de modelos:")
             modelo_str = '[' + ', '.join(opciones_modelo) + ']'
@@ -399,20 +397,6 @@ try:
     screenshot_path =   os.path.join(directorio_actual, '..', 'Imagenes',f'captura_{cliente_nombre}_{timestamp}_rentanacional.png')
     driver.save_screenshot(screenshot_path)
 
- # Verificación 
-    #parametros = {
-    #'tipo_vehiculo': tipo_vehiculo_reporte,
-    #'tipo_persona': tipo_persona_reporte,
-    #'uso_vehiculo': uso_vehiculo_reporte,
-    #'marca': marca_reporte,
-    #'modelo': modelo_reporte,
-    #'ano': opciones_ano,
-#}
-    #ruta_archivo = os.path.join(directorio_actual, '..', 'Seleccion','seleccion_rentanacional')
-    #with open(ruta_archivo, 'w') as archivo:
-    #    for clave, valor in parametros.items():
-    #        archivo.write(f'{clave}: {valor}\n')
-    
 except Exception as e:
     print(f"Error: {str(e)}")
     logging.error(f"Error: {str(e)}")

@@ -1,25 +1,20 @@
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from difflib import SequenceMatcher
-import time
 from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.webdriver.support.ui import Select
-from difflib import get_close_matches
-from datetime import datetime
-import logging
-import sys
-from selenium.common.exceptions import StaleElementReferenceException
-from bs4 import BeautifulSoup
-import traceback
-import pandas as pd 
-from unidecode import unidecode
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from difflib import get_close_matches
+from difflib import SequenceMatcher
+from selenium import webdriver
+from datetime import datetime
+import traceback
+import logging
 import json
+import time
+import sys
 import os
 
 def esperar_elemento(driver, locator, *numeros_condiciones, max_intentos=5):
@@ -79,7 +74,6 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
     return False  # No se pudo hacer clic después de los intentos máximos
 
 # Directorio actual de Script
-# print(f"Directorio actual de Script : {directorio_actual}")
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
@@ -99,6 +93,7 @@ try:
         datos_content = file.read()
         datos = eval(datos_content)
 
+    #.. Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
     print("____________________________________________________________________________________________________")
@@ -110,9 +105,6 @@ try:
     print(informe)
     print("____________________________________________________________________________________________________")
     
-    driver.get("https://seguros.sura.cl/acceso/corredor")
-    driver.maximize_window()
-    
 # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
     # Leer el archivo JSON desde la ruta relativa
@@ -121,6 +113,9 @@ try:
     # Acceder a los datos
     rut = credentials['rut_sura']
     password = credentials['password_sura']
+    #.. Login
+    driver.get("https://seguros.sura.cl/acceso/corredor")
+    driver.maximize_window()
 
  # Botón Rut
     BOTON_LOGIN_locator = (By.ID, "Rut")
@@ -383,28 +378,6 @@ try:
     screenshot_path = os.path.join(directorio_actual, '..','Imagenes', f"captura_{cliente_nombre}_{timestamp}_sura.png")
     driver.save_screenshot(screenshot_path)
     
-#     parametros = {
-#     'tipo_vehiculo': tipo_vehiculo_parametro,
-#     'tipo_persona': 'natural',
-#     'rut': '144187865',
-#     'nombre_contratante': 'Yasna',
-#     'apellido_contratante': 'Paredes',
-#     'uso_vehiculo': 'usado',
-#     'patente': 'RLRJ87',
-#     'marca': 'MG',
-#     'modelo': 'RX5',
-#     'ano': '2022',
-#     'rubro': '',
-#     'estilo_vehiculo': 'AUTOMOVIL',
-#     'comuna': 'VIÑA DEL MAR - VALPARAÍSO',
-#     'marca_liberty': 'MG'
-# }
-
-# # Verificación
-#     ruta_archivo = os.path.join(directorio_actual, '..','Seleccion', 'seleccion_sura')
-#     with open(ruta_archivo, 'w') as archivo:
-#         for clave, valor in parametros.items():
-#             archivo.write(f'{clave}: {valor}\n')
 
 except Exception as e:
     # Registrar cualquier excepción que pueda ocurrir

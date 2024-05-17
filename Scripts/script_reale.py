@@ -9,13 +9,10 @@ from selenium.webdriver import ActionChains
 import logging, sys, time, traceback
 from selenium import webdriver
 from datetime import datetime
-from bs4 import BeautifulSoup
-import pandas as pd
 import json
 import os
 
-
-#Definiciones
+# Definiciones
 def seleccionar_opcion_similar(valor_manual, opciones):
     mejor_coincidencia = get_close_matches(valor_manual, opciones, n=1, cutoff=0.6)
     return mejor_coincidencia[0] if mejor_coincidencia else None
@@ -81,29 +78,30 @@ def esperar_pagina_cargada(driver):
     except Exception as e:
         print("Error al esperar el overlay desaparecido:", e)
 
-# Obtener el directorio actual (donde se encuentra el script)
+# Directorio Actual Script
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
 log_file_path = os.path.join(directorio_actual, '..', 'Reportes', 'reporte_reale.txt')
 logging.basicConfig(filename=log_file_path, level=logging.INFO)
-
-# Redirigir stdout y stderr a un archivo de registro
 sys.stdout = open(log_file_path, 'w')
 sys.stderr = open(log_file_path, 'w')
 
 try:
- #Ruta de chromedriver
+ # Ruta de chromedriver
     service = Service(executable_path=os.path.join(directorio_actual, '..', 'chromedriver.exe')) 
     driver = webdriver.Chrome(service=service)
 
- #Datos
+ # Datos
     datos_file_path = os.path.join(directorio_actual, '..', 'Datos','datos_reale.txt') 
     with open(datos_file_path, 'r', encoding='utf-8') as file:
             datos_content = file.read()
             datos = eval(datos_content)
+
+    #.. Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
+    print("____________________________________________________________________________________________________")
     
  #Registro de información
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -112,19 +110,18 @@ try:
     print(informe)
     print("____________________________________________________________________________________________________")
  
- #Página Login
-    driver.get("https://apps4.realechile.cl/portalCorredores/login")
-    driver.maximize_window()
-
-    # Construir la ruta relativa al archivo credenciales.json
+ # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    # Leer el archivo JSON desde la ruta relativa
+    #.. Leer el archivo JSON desde la ruta relativa
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
-    # Acceder a los datos
+    #.. Acceder a los datos
     rut = credentials['rut_reale']
     password = credentials['password_reale']
     email = credentials["email"]
+    #.. Página Login
+    driver.get("https://apps4.realechile.cl/portalCorredores/login")
+    driver.maximize_window()
 
     RUT_REALE_locator = (By.ID, "username")
     RUT_REALE = esperar_elemento(driver, RUT_REALE_locator, 1, 2 ,3, max_intentos=15)
@@ -135,14 +132,14 @@ try:
     PASS_REALE.send_keys(password)
     PASS_REALE.send_keys(Keys.ENTER)
 
- #Cotizador Liviano
+ # Cotizador Liviano
     driver.get(f"https://cotizador.realechile.cl/index/{rut}")
     locator_liviano = (By.XPATH, '//*[contains(text(), "liviano")]')
     ELEMENTO_LIVIANO = esperar_elemento(driver, locator_liviano, 1,2,3)
     hacer_clic_elemento_con_reintentos(driver, ELEMENTO_LIVIANO)  
 
- #Persona Natural o Jurídica
- #Persona Natural
+ # Persona Natural o Jurídica
+ # Persona Natural
     if datos["tipo_persona"] == "natural":
         tipo_persona_locator = (By.ID, "tipoPersona")
         TIPO_PERSONA = esperar_elemento(driver, tipo_persona_locator, 1, 2, 3)
@@ -155,7 +152,7 @@ try:
         print("________________________________________________________")
 
         esperar_pagina_cargada(driver)
- #Rut
+ # Rut
         rut_contratante_locator = (By.ID, "rut")
         RUT_CONTRATANTE = esperar_elemento(driver, rut_contratante_locator, 1, 2, 3)
         RUT_CONTRATANTE.send_keys(datos["rut"])
@@ -164,14 +161,14 @@ try:
 
         esperar_pagina_cargada(driver)
 
- #E-Mail
+ # E-Mail
         EMAIL_locator = (By.ID,"email")
         EMAIL = esperar_elemento(driver, EMAIL_locator, 1,2,3)
         hacer_clic_elemento_con_reintentos(driver, EMAIL)
 
         esperar_pagina_cargada(driver)
         
- #Nombre contratante
+ # Nombre contratante
         input_nombres_locator = (By.ID, "firstName")
         input_nombres = esperar_elemento(driver, input_nombres_locator, 1, 2, max_intentos=5)
         if input_nombres.is_enabled():
@@ -184,7 +181,7 @@ try:
             pass 
         esperar_pagina_cargada(driver)
             
- #Apellido contratante
+ # Apellido contratante
         input_apellidos_locator = (By.ID, "lastName")
         input_apellidos = esperar_elemento(driver, input_apellidos_locator, 1, 2, max_intentos=5)
         if input_apellidos.is_enabled():
@@ -195,9 +192,9 @@ try:
             print("El campo 'apellido' estaba autocompletado")
             print("________________________________________________________")
             pass
-
         esperar_pagina_cargada(driver)
- #Persona Jurídica
+
+ # Persona Jurídica
     else:
         TIPO_PERSONA_locator = (By.ID, "tipoPersona")
         TIPO_PERSONA = esperar_elemento(driver, TIPO_PERSONA_locator, 1, 2, max_intentos=5)
@@ -208,14 +205,13 @@ try:
         print("________________________________________________________")
 
         esperar_pagina_cargada(driver)
-
- #Rut
+ 
+ # Rut
         RUT_CONTRATANTE_locator = (By.ID, "rut")
         RUT_CONTRATANTE = esperar_elemento(driver, RUT_CONTRATANTE_locator, 1, 2, max_intentos=5)
         if RUT_CONTRATANTE.is_enabled():
             RUT_CONTRATANTE.send_keys(datos["rut"])
             print(f"Rut : {datos['rut']}")
-
             print("________________________________________________________")
         else:
             print("No se pudo rellenar el campo 'Rut'")
@@ -230,7 +226,7 @@ try:
 
     esperar_pagina_cargada(driver)
 
-    #E-Mail
+    # E-Mail
     EMAIL_locator = (By.ID, "email")
     EMAIL = esperar_elemento(driver, EMAIL_locator, 1,2 )
     EMAIL.clear()
@@ -238,7 +234,7 @@ try:
 
     esperar_pagina_cargada(driver)
 
- #Comuna
+ # Comuna
     comuna_locator = (By.ID, "comuna")
     COMUNA = esperar_elemento(driver, comuna_locator, 1, 2, 3, max_intentos=5)
     select = Select(COMUNA)
@@ -250,14 +246,14 @@ try:
 
     esperar_pagina_cargada(driver)
         
- #Continuar
+ # Continuar
     SUBMIT_locator = (By.NAME, "submit")
     SUBMIT = esperar_elemento(driver, SUBMIT_locator, 1, 2,3)
     hacer_clic_elemento_con_reintentos(driver, SUBMIT)
         
     esperar_pagina_cargada(driver)
 
- #Auto Nuevo
+ # Auto Nuevo
     if datos["uso_vehiculo"] == "nuevo":
         USO_VEHICULO_locator = (By.ID, "nuevoUsado")
         USO_VEHICULO = esperar_elemento(driver, USO_VEHICULO_locator, 1, 2, max_intentos=5)
@@ -273,7 +269,7 @@ try:
 
         esperar_pagina_cargada(driver)     
 
- #Año Vehiculo
+ # Año Vehiculo
         ANO_VEHICULO_locator = (By.ID, "anio")
         ANO_VEHICULO = esperar_elemento(driver, ANO_VEHICULO_locator, 1, 2,  3)
         if ANO_VEHICULO:
@@ -293,7 +289,7 @@ try:
 
         time.sleep(3)
         
- #Marca  
+ # Marca  
         marca_locator = (By.ID, "marca")
         marca_elemento = esperar_elemento(driver, marca_locator, 1, 2, 3)
         if marca_elemento and marca_elemento.is_enabled():
@@ -321,7 +317,7 @@ try:
         esperar_pagina_cargada(driver)
         time.sleep(3)
        
- #Modelo
+ # Modelo
         modelo_locator = (By.ID, 'modelo')
         modelo_elemento = esperar_elemento(driver, modelo_locator, 1, 2, 3)
         if modelo_elemento:
@@ -381,7 +377,7 @@ try:
             print("No se requiere seleccionar versión")
             print(f"Error: {e}")
         
- #Particular
+ # Particular
         if datos["tipo_vehiculo"] == "particular":
             tipo_vehiculo_locator = (By.ID, "uso")
             TIPO_VEHICULO = esperar_elemento(driver, tipo_vehiculo_locator,1,2)
@@ -389,7 +385,7 @@ try:
             print("Vehiculo : Particular")
             print("_____________________________________________________________________")
 
- #Comercial
+ # Comercial
         else:
             tipo_vehiculo_locator = (By.ID, "uso")
             TIPO_VEHICULO = esperar_elemento(driver, tipo_vehiculo_locator,1,2)
@@ -399,21 +395,21 @@ try:
 
         esperar_pagina_cargada(driver)
     
- #Tipo combustible
+ # Tipo combustible
         tipo_combustible_locator = (By.ID, "tipoCombustible")
         TIPO_COMBUSTIBLE = esperar_elemento(driver, tipo_combustible_locator,1,2)
         Select(TIPO_COMBUSTIBLE).select_by_value("1: 9")
 
         esperar_pagina_cargada(driver)
 
- #Km al año
+ # Km al año
         km_locator = (By.ID, "kmAlAnio")
         KM_X_ANO = esperar_elemento(driver, km_locator,1,2)
         Select(KM_X_ANO).select_by_value("1: 16")
 
         esperar_pagina_cargada(driver)
 
- #Compañia anterior
+ # Compañia anterior
         try:
             compania_anterior_locator = (By.ID, "companiaAnterior")
             COMPANIA_ANTERIOR = esperar_elemento(driver, compania_anterior_locator,1,2)
@@ -427,7 +423,7 @@ try:
 
         esperar_pagina_cargada(driver)
           
- #Auto usado
+ # Auto usado
     else:
         uso_vehiculo_locator = (By.ID, "nuevoUsado")
         USO_VEHICULO = esperar_elemento(driver, uso_vehiculo_locator, 1,2,3)
@@ -438,7 +434,7 @@ try:
 
         esperar_pagina_cargada(driver)
 
- #Patente
+ # Patente
         patente_locator = (By.ID,"patente")
         PATENTE_VEHICULO = esperar_elemento(driver, patente_locator,1,2)
         PATENTE_VEHICULO.send_keys(datos["patente"])
@@ -448,7 +444,7 @@ try:
         esperar_pagina_cargada(driver)
 
 
- #Año vehiculo
+ # Año vehiculo
         ano_vehiculo_locator = (By.ID, "anio")
         ANO_VEHICULO = esperar_elemento(driver, ano_vehiculo_locator,1,2,3)
         hacer_clic_elemento_con_reintentos(driver, ANO_VEHICULO)
@@ -468,7 +464,7 @@ try:
         esperar_pagina_cargada(driver)
 
         
- #Marca vehiculo
+ # Marca vehiculo
         marca_locator = (By.ID, "marca")
         MARCA = esperar_elemento(driver, marca_locator,1,2)
         if MARCA.is_enabled():
@@ -495,7 +491,7 @@ try:
        
         esperar_pagina_cargada(driver)
       
- #Modelo vehiculo
+ # Modelo vehiculo
         modelo_locator = (By.ID, "modelo")
         MODELO = esperar_elemento(driver, modelo_locator, 1,2)
         time.sleep(2)
@@ -548,7 +544,7 @@ try:
             print("No se requiere seleccionar versión")
             print(f"Error: {e}")
                                
- #Particular
+ # Particular
         if datos["tipo_vehiculo"] == "particular":
             tipo_vehiculo_locator = (By.ID, "uso")
             TIPO_VEHICULO = esperar_elemento(driver, tipo_vehiculo_locator,1,2)
@@ -556,7 +552,7 @@ try:
             print("Vehiculo : Particular")
             print("_____________________________________________________________________")
 
- #Comercial    
+ # Comercial    
         else:
             tipo_vehiculo_locator = (By.ID, "uso")
             TIPO_VEHICULO = esperar_elemento(driver, tipo_vehiculo_locator,1,2)
@@ -566,21 +562,21 @@ try:
 
         esperar_pagina_cargada(driver)
 
- #Tipo combustible
+ # Tipo combustible
         tipo_combustible_locator = (By.ID, "tipoCombustible")
         TIPO_COMBUSTIBLE = esperar_elemento(driver, tipo_combustible_locator,1,2)
         Select(TIPO_COMBUSTIBLE).select_by_value("1: 9")
 
         esperar_pagina_cargada(driver)
 
- #Km al año
+ # Km al año
         km_locator = (By.ID, "kmAlAnio")
         KM_X_ANO = esperar_elemento(driver, km_locator,1,2)
         Select(KM_X_ANO).select_by_value("1: 16")
 
         esperar_pagina_cargada(driver)
 
- #Compañia anterior
+ # Compañia anterior
         try:
             compania_anterior_locator = (By.ID, "companiaAnterior")
             COMPANIA_ANTERIOR = esperar_elemento(driver, compania_anterior_locator,1,2)
@@ -594,21 +590,21 @@ try:
 
         esperar_pagina_cargada(driver)
           
-#Botón continuar
+# Botón continuar
     fa_icon_element = WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, '//button[@name="submit"]/fa-icon[@class="ng-fa-icon"]'))
     )
     driver.execute_script("arguments[0].click();", fa_icon_element)
+    
     time.sleep(5)
 
- #Scrollear página
+    #..Scrollear página
     driver.execute_script("window.scrollTo(0, window.scrollY + 500)")
-
- #Pantallazo
+    #..Pantallazo
     timestamp = time.strftime("%Y%m%d_%H%M%S")  # Agrega un timestamp para hacer el nombre único
     cliente_nombre = datos['nombre_contratante']  # Usa el nombre del cliente como parte del nombre del archivo 
     screenshot_path = os.path.join(directorio_actual, '..', 'Imagenes',f'captura_{cliente_nombre}_{timestamp}_reale.png') 
- #Guardar pantallazo
+    #--Guardar pantallazo
     driver.save_screenshot(screenshot_path)
 
 except Exception as e:

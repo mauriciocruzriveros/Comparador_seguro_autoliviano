@@ -8,8 +8,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from datetime import datetime
-from bs4 import BeautifulSoup
-import pandas as pd
 import traceback
 import logging
 import json
@@ -17,6 +15,7 @@ import time
 import sys
 import os
 
+# Definiciones
 def esperar_elemento(driver, locator, *numeros_condiciones, max_intentos=5):
         condiciones = {
             1: EC.presence_of_element_located,
@@ -86,7 +85,7 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    #Configurar el registro
+ # Configurar el registro
     log_file_path = os.path.join(directorio_actual, '..', 'Reportes','reporte_liberty.txt') 
     logging.basicConfig(filename=log_file_path, level=logging.INFO)
     sys.stdout = open(log_file_path, 'w')
@@ -107,24 +106,22 @@ try:
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
               f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
-
- # Imprimir en la consola
     print(informe)
     print("____________________________________________________________________________")
 
- # Inicio de página Liberty
-    driver.maximize_window()
-    driver.get("https://www.liberty.cl/menu_aplicaciones/viewLogin")
 
- # Inicio de sesión
-    # Datos
+
+ # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    # Leer el archivo JSON desde la ruta relativa
+    #.. Leer el archivo JSON desde la ruta relativa
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
     rut = credentials['rut_liberty']
     password = credentials['password_liberty']
     email = credentials['email']
+    #.. Login
+    driver.maximize_window()
+    driver.get("https://www.liberty.cl/menu_aplicaciones/viewLogin")
 
     RUT_LIBERTY_locator = (By.CLASS_NAME, "nomUsuario")
     RUT_LIBERTY = esperar_elemento(driver, RUT_LIBERTY_locator, 1)
@@ -385,10 +382,10 @@ try:
     # Hacer clic en el botón de cierre
     #hacer_clic_elemento_con_reintentos_js(driver, BOTON_CIERRE)
      
- # Desplazar página
+    #.. Scrollear Página
     driver.execute_script("window.scrollTo(0, window.scrollY + 500)")
     
- # Pantallazo
+    #.. Pantallazo
     timestamp = time.strftime("%Y%m%d_%H%M%S")  
     cliente_nombre = datos['nombre_contratante']   
     screenshot_path = os.path.join(directorio_actual, '..', 'Imagenes', f'captura_{cliente_nombre}_{timestamp}_liberty.png') 

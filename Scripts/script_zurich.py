@@ -1,32 +1,25 @@
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from difflib import SequenceMatcher
-import time
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 from difflib import get_close_matches
-from datetime import datetime
-import logging
-import sys
-from selenium.common.exceptions import StaleElementReferenceException
-from bs4 import BeautifulSoup
-import traceback
-import pandas as pd 
-import locale
-import unicodedata
+from difflib import SequenceMatcher
 from unidecode import unidecode
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, NoSuchFrameException
+from selenium import webdriver
+from datetime import datetime
+import traceback
+import logging
+import time
 import json
+import sys
 import os
 
 #Definiciones 
 def esperar_elemento(driver, locator, *numeros_condiciones, max_intentos=5):
-
     # Define las condiciones de espera y sus códigos
     condiciones = {
         1: EC.presence_of_element_located,
@@ -96,7 +89,7 @@ def espera_carga_completa(driver, tiempo_espera=10):
         print(f"Error al esperar la carga completa de la página: {str(e)}")
         return False
 
-# Obtener el directorio actual (donde se encuentra el script)
+# Directorio actual
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
@@ -106,38 +99,41 @@ sys.stdout = open(log_file_path, 'w')
 sys.stderr = open(log_file_path, 'w')
 
 try:
- #Ruta de chromedriver
+ # Ruta de chromedriver
     service = Service(executable_path=os.path.join(directorio_actual,"..", "chromedriver.exe"))
     driver = webdriver.Chrome(service=service)
-
-    
- #Datos
+ 
+ # Datos
     datos_file_path = os.path.join (directorio_actual,"..", "Datos","datos_ans.txt")
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         datos_content = file.read()
         datos = eval(datos_content)
+     
+     #.. Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
     print("____________________________________________________________________________________________________")
 
- #Registro de información
+ # Registro de información
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
             f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
     print(informe)
     print("____________________________________________________________________________________________________")
 
-    driver.get("https://portalcorredores.zurich.cl/auth/login")
-    driver.maximize_window()
  
- #Credenciales
+ # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
     # Leer el archivo JSON desde la ruta relativa
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
     # Acceder a los datos
     rut = credentials['rut_zurich']
-    password = credentials['password_zurich']
+    password = credentials['password_zurich']    
+
+    #.. Login
+    driver.get("https://portalcorredores.zurich.cl/auth/login")
+    driver.maximize_window()
 
  # User
     user_locator = (By.CSS_SELECTOR, '.input-user input')
@@ -157,17 +153,17 @@ try:
 
     driver.get("https://portalcorredores.zurich.cl/cotizadores/accesos")
 
- #Botón Automovil
+ # Botón Automovil
     boton_automovil_locator = (By.ID, "Cotizadores-Seguros-Individuales-Automovil")
     BOTON_AUTOMOVIL = esperar_elemento(driver, boton_automovil_locator, 1, 2 ,3)
     hacer_clic_elemento_con_reintentos(driver, BOTON_AUTOMOVIL, 5)
 
- #Botón Continue
+ # Botón Continue
     button_locator = (By.CLASS_NAME, 'btn-continue--active')  # Selector del botón por su clase
     BUTTON = esperar_elemento(driver, button_locator, 2)  # Esperar a que el botón esté presente y sea clickeable
     hacer_clic_elemento_con_reintentos(driver, BUTTON)  # Hacer clic en el botón utilizando la función definida
 
- #Botón continuar
+ # Botón continuar
     boton_continue_2_locator = (By.ID, "Boton-Modal-Cotizadores-Cotizar")
     BOTON_CONTINUE_2 = esperar_elemento(driver, boton_continue_2_locator, 1,2,3)
     hacer_clic_elemento_con_reintentos(driver, BOTON_CONTINUE_2, 5)
@@ -206,7 +202,7 @@ try:
     
     espera_carga_completa(driver)
            
- #Marca
+ # Marca
     cbo_marca_locator = (By.ID, "detalle_cboMarca")
     cbo_marca_element = esperar_elemento(driver, cbo_marca_locator, 1 ,  3)
     select_cbo_marca = Select(cbo_marca_element)
@@ -232,7 +228,7 @@ try:
 
     time.sleep(4)
 
- #Modelo
+ # Modelo
     cbo_modelo_locator = (By.ID, "detalle_cboModelo")
     cbo_modelo_element = esperar_elemento(driver, cbo_modelo_locator, 1 , 3)
     select_cbo_modelo = Select(cbo_modelo_element)
@@ -255,7 +251,7 @@ try:
     else:
         pass
 
- #Año
+ # Año
     ano_locator = (By.ID, "detalle_cboAno")
     cbo_ano = esperar_elemento(driver, ano_locator, 1 , 3)
     if cbo_ano.is_enabled():
@@ -270,8 +266,8 @@ try:
     else:       
         pass
 
- #Uso Vehiculo
-    #Particular
+ # Uso Vehiculo
+    # Particular
     if datos["uso_vehiculo"]== "particular":
         select_element_uso_locator = (By.ID,"detalle_cboUso")
         select_uso = esperar_elemento(driver, select_element_uso_locator, 1 ,3)
@@ -284,14 +280,14 @@ try:
         select_element_uso.select_by_value("2")
 
 
- #Rut
+ # Rut
     rut_locator = (By.ID, "detalle_txtRut")
     RUT = esperar_elemento(driver, rut_locator, 1 , 3)
     RUT.send_keys(datos["rut"])
     RUT.send_keys(Keys.ENTER)
     espera_carga_completa(driver)
  
- #Nombre
+ # Nombre
     nombre_locator = (By.ID, "detalle_txtAuxNombres")
     NOMBRE = esperar_elemento(driver, nombre_locator, 1 , 3)
     if NOMBRE.is_enabled():
@@ -301,7 +297,7 @@ try:
     else:
         pass
 
- #Comuna 
+ # Comuna 
     comuna_deseada = datos["comuna"]
     comuna_locator = (By.ID, "detalle_cboComuna")
     COMUNA = esperar_elemento(driver, comuna_locator,1,2,3)
@@ -319,24 +315,24 @@ try:
 
     espera_carga_completa(driver)
 
- #Botón cotizar
+ # Botón cotizar
     boton_cotizar_locator = (By.ID, "detalle_btnCotizar")
     COTIZAR = esperar_elemento (driver, boton_cotizar_locator, 1 , 2,3)
     hacer_clic_elemento_con_reintentos(driver, COTIZAR) 
 
- #Botón comprar
+ # Botón comprar
     boton_comprar_locator = (By.ID, "detalle_btnComprar")
     esperar_elemento(driver, boton_comprar_locator,1,2,3, max_intentos=50)
 
+    #.. Scrollear pag
     driver.execute_script("window.scrollTo(0, window.scrollY + 500)")
 
-    #Pantallazo
+    #.. Pantallazo
     timestamp = time.strftime("%Y%m%d_%H%M%S")  # Agrega un timestamp para hacer el nombre único
     cliente_nombre = datos['nombre_contratante']  # Usa el nombre del cliente como parte del nombre del archivo
     screenshot_path = os.path.join(directorio_actual, "..", "Imagenes", f"captura_{cliente_nombre}_{timestamp}_ZURICH.png")
     driver.save_screenshot(screenshot_path)
-
-
+    
 except Exception as e:
     # Registrar cualquier excepción que pueda ocurrir
     print(f"Error: {str(e)}")

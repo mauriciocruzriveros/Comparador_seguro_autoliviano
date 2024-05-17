@@ -1,5 +1,4 @@
 from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,13 +10,9 @@ from difflib import get_close_matches
 from difflib import SequenceMatcher
 from unidecode import unidecode
 from selenium import webdriver
-from bs4 import BeautifulSoup
 from datetime import datetime
-import pandas as pd
-import unicodedata
 import traceback
 import logging
-import locale
 import json
 import time
 import sys
@@ -125,19 +120,18 @@ def esperar_carga_pagina(driver, intentos=0, max_intentos=5):
     print(f"No se pudo cargar completamente la página después de {max_intentos} intentos.")
     return False  # La carga falló
 
-# Obtener el directorio actual (donde se encuentra el script)
+# Directorio actual:
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
 log_file_path = os.path.join(directorio_actual, '..', 'Reportes','reporte_ans.txt')
 logging.basicConfig(filename=log_file_path, level=logging.INFO )
-
 sys.stdout = open(log_file_path, 'w')
 sys.stderr = open(log_file_path, 'w')
 
 try:
-    ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
  # Ruta de chromedriver
+    ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
     service = Service(executable_path=ruta_chromedriver)
     driver = webdriver.Chrome(service=service)
 
@@ -157,15 +151,8 @@ try:
     print(informe)
     print("____________________________________________________________________________________________________")
 
- # Página login
-    driver.get("https://www.ant.cl/portal/account/login")
-
- # Botón Login
-    BOTON_LOGIN_locator = (By.ID, "login-login-button")
-    BOTON_LOGIN = esperar_elemento(driver, BOTON_LOGIN_locator, 1, 3)
-    hacer_clic_elemento_con_reintentos(driver, BOTON_LOGIN)
-
- # Construir la ruta relativa al archivo credenciales.json
+ 
+ # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
     # Leer el archivo JSON desde la ruta relativa
     with open(ruta_credenciales, 'r') as file:
@@ -173,22 +160,26 @@ try:
     # Acceder a los datos
     email = credentials['email']
     password = credentials['password_ans']
-
- # Rut
+    #.. Página login
+    driver.get("https://www.ant.cl/portal/account/login")
+    driver.maximize_window()
+    #.. Botón Login
+    BOTON_LOGIN_locator = (By.ID, "login-login-button")
+    BOTON_LOGIN = esperar_elemento(driver, BOTON_LOGIN_locator, 1, 3)
+    hacer_clic_elemento_con_reintentos(driver, BOTON_LOGIN)
+    #.. Rut
     RUT_ANS_locator = (By.ID, "email")
     RUT_ANS = esperar_elemento(driver, RUT_ANS_locator, 1, 3)
     RUT_ANS.send_keys(Keys.CONTROL + "a")
     RUT_ANS.send_keys(email)
-
- # Pass
+    #.. Pass
     PASS_ANS_locator = (By.ID, "password")
     PASS_ANS = esperar_elemento(driver, PASS_ANS_locator, 1, 3)
     PASS_ANS.send_keys(Keys.CONTROL + "a")
     PASS_ANS.send_keys(password)
     PASS_ANS.send_keys(Keys.ENTER)
     #_________________________________________________________________________________________________#
-    driver.maximize_window()
-
+   
     esperar_carga_pagina(driver)
 
  # Vehiculos livianos
@@ -196,7 +187,7 @@ try:
     BOTON_VEHICULO_LIVIANO = esperar_elemento(driver, elemento_vehiculos_livianos_locator,1,2,3)
     hacer_clic_elemento_con_reintentos_js(driver, BOTON_VEHICULO_LIVIANO)
     
-    #_________________________________________________________________________________________________#
+    #.. Cambiar iframe
     iframe_locator = (By.ID, "iframe-render")
     IFRAME = esperar_elemento(driver, iframe_locator,1,2)
     driver.switch_to.frame(IFRAME)
@@ -447,6 +438,7 @@ try:
 
     print("____________________________________________________________________________________________________")
         
+ # Scrollear pagina
     driver.execute_script("window.scrollTo(0, window.scrollY + 125)")
     
     time.sleep(1)
