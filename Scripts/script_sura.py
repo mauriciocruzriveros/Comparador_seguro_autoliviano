@@ -74,6 +74,7 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
     return False  # No se pudo hacer clic después de los intentos máximos
 
 # Directorio actual de Script
+# print(f"Directorio actual de Script : {directorio_actual}")
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
@@ -92,8 +93,7 @@ try:
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         datos_content = file.read()
         datos = eval(datos_content)
-
-    #.. Ver datos
+    # Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
     print("____________________________________________________________________________________________________")
@@ -105,6 +105,9 @@ try:
     print(informe)
     print("____________________________________________________________________________________________________")
     
+    driver.get("https://seguros.sura.cl/acceso/corredor")
+    driver.maximize_window()
+    
 # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
     # Leer el archivo JSON desde la ruta relativa
@@ -113,28 +116,16 @@ try:
     # Acceder a los datos
     rut = credentials['rut_sura']
     password = credentials['password_sura']
-    #.. Login
-    driver.get("https://seguros.sura.cl/acceso/corredor")
-    driver.maximize_window()
 
  # Botón Rut
     BOTON_LOGIN_locator = (By.ID, "Rut")
     BOTON_LOGIN = esperar_elemento(driver, BOTON_LOGIN_locator, 1, 2, 3, max_intentos=3)
-    if BOTON_LOGIN:
-        hacer_clic_elemento_con_reintentos(driver , BOTON_LOGIN)
-    else:
-        print(f"No se pudo encontrar el botón {BOTON_LOGIN_locator}.")
-
     for digito in rut:
         BOTON_LOGIN.send_keys(digito)
     
  # Botón Pass
     BOTON_PASS_locator = (By.ID, "Password")
     BOTON_PASS = esperar_elemento(driver, BOTON_PASS_locator, 1, 2, 3, max_intentos=10)
-    if BOTON_PASS:
-        hacer_clic_elemento_con_reintentos(driver ,BOTON_PASS)
-    else:
-        print(f"No se pudo encontrar el botón {BOTON_PASS_locator}")
     BOTON_PASS.send_keys(password)
  
  # Botón Enviar
@@ -145,27 +136,24 @@ try:
     else:
         print(f"No se pudo encontrar {BOTON_ENVIAR_locator}.")
  
- # Esperar que cargue la página
-    # enlace_ventas_locator = (By.ID, "ctlMenuSuperior_TB417B4A6110_ctl00_ctl00_navigationUl")
-    # enlace_ventas = esperar_elemento(driver, enlace_ventas_locator, 1,2, max_intentos=10)
-    # if enlace_ventas:
-    #     pass
-    # else:
-    #     print(f"No se pudo encontrar {enlace_ventas_locator}")
+    # Esperar pagina
+    elemento_esperado = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "menu"))
+    )
 
-    time.sleep(3)
-
- # Particular
+# Particular
     if datos["tipo_vehiculo"] == "particular":
         driver.get("https://seguros.sura.cl/sucursal-virtual/corredor/venta/movilidad/autoclickanual/cotizar/particular-cotizar")
         tipo_vehiculo_parametro = "particular"
- 
- # Comercial
+        print("Redireccionando a Particular")
+
+# Comercial
     else:
         driver.get("https://seguros.sura.cl/sucursal-virtual/corredor/venta/movilidad/autoclickanual/cotizar/comercial-cotizar")
         tipo_vehiculo_parametro = "comercial"
+        print("Redireccionando a Comercial") 
 
- # Cambiar iframe
+    # Cambiar iframe
     iframe_locator = (By.ID, "ifrExternalFrame")
     iframe_element = esperar_elemento(driver, iframe_locator, 1, max_intentos=5)
     if iframe_element:
@@ -173,8 +161,8 @@ try:
         print("Cambiado al contexto del iframe correctamente.")
     else:
         print(f"No se pudo encontrar {iframe_locator}.")
-   
- # Click No
+    
+# Click No
     elemento_no_locator = (By.CLASS_NAME, "checkMayorNo")
     ELEMENTO_NO = esperar_elemento(driver, elemento_no_locator, 1, 2, 3, max_intentos=3)
     hacer_clic_elemento_con_reintentos_js(driver, ELEMENTO_NO)
