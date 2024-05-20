@@ -2,6 +2,7 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
@@ -11,6 +12,8 @@ from difflib import SequenceMatcher
 from unidecode import unidecode
 from selenium import webdriver
 from datetime import datetime
+from bs4 import BeautifulSoup
+import pandas as pd
 import traceback
 import logging
 import json
@@ -129,8 +132,10 @@ try:
  # Ruta de chromedriver
     ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
     service = Service(executable_path=ruta_chromedriver)
-    driver = webdriver.Chrome(service=service)
-
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+                              
  # Datos  
     datos_file_path = os.path.join(directorio_actual, '..', 'Datos','datos_ans.txt') 
     with open(datos_file_path, 'r', encoding='utf-8') as file:
@@ -287,23 +292,25 @@ try:
     time.sleep(2)
 
  # Año
+    ano_locator = (By.ID, "A_o_vehiculo_livianos_TablaSimple_Entero" )
+    ANO = esperar_elemento(driver, ano_locator,1,2,3)
+    select_ano = Select(ANO)
+    dato_deseado = datos["ano"]
     try:
-        ano_vehiculo_locator = (By.ID, "select2-A_o_vehiculo_livianos_TablaSimple_Entero-container")
-        ANO_VEHICULO = esperar_elemento(driver, ano_vehiculo_locator, 1,2,3)
-        hacer_clic_elemento_con_reintentos(driver, ANO_VEHICULO)
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "select2-search__field"))
-        )
-        dato_ano = str(datos["ano"])
-        driver.find_element(By.CLASS_NAME, "select2-search__field").send_keys(dato_ano)
-        opcion_ano = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, f"//li[text()='{dato_ano}']"))
-        )
-        hacer_clic_elemento_con_reintentos(driver, opcion_ano)
-
-    except Exception as e:
-        print(f"Error: {e}")
+        select_ano.select_by_visible_text(dato_deseado)
+        print(f"Se selecciono el ano deseado {dato_deseado} sin printear la lista de anos")
+        print("____________________________________________________________________________________________________")
     
+    except:
+        print("Opciones disponibles:")
+        for opcion in select_ano.options:
+            print(opcion.text)
+        opciones_disponibles = [opcion.text for opcion in select_ano.options]
+        mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, dato_deseado, opcion).ratio())
+        select_ano.select_by_visible_text(mejor_coincidencia)
+        print(f"Se selecciono la mejor coincidencia para '{dato_deseado}': {mejor_coincidencia}")
+        print("____________________________________________________________________________________________________")
+
  # Uso vehiculo
     uso_vehiculo_locator = (By.ID, "select2-uso_vehiculo_TablaSimple_Texto-container")
     USO_VEHICULO = esperar_elemento(driver, uso_vehiculo_locator,1,2,3)
@@ -333,38 +340,26 @@ try:
                 break  
 
  # Comuna
-    comuna_locator = (By.ID, "select2-Comuna-container")
+    comuna_locator = (By.ID, "Comuna")
     COMUNA = esperar_elemento(driver, comuna_locator, 1,2,3)
     hacer_clic_elemento_con_reintentos(driver, COMUNA)
-    elemento_comuna = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "select2-Comuna-results"))
-    )
-    opciones_comuna = elemento_comuna.find_elements(By.CSS_SELECTOR, 'li.select2-results__option')
-    #..Opción exacta  
+    select_comuna = Select(COMUNA)
+    dato_deseado = datos["comuna"]
     try:
-        opcion_comuna_por_texto = hacer_clic_elemento_con_reintentos((By.XPATH, f'//li[text()="{datos["comuna"]}"]'), 1,2,3)
-       
-    except Exception as e:
-        print(f"Error al seleccionar la comuna: {e}")
-    #.. Mejor Match
+        select_comuna.select_by_visible_text(dato_deseado)
+        print(f"Se selecciono el comuna deseado {dato_deseado} sin printear la lista de comunas")
+        print("____________________________________________________________________________________________________")
     
-        opciones_ordenadas = sorted(opciones_comuna, key=lambda x: unidecode(x.text.strip().lower()))
-        for opcion_comuna in opciones_ordenadas:
-            print(opcion_comuna.text.strip())
-        # Coincidencia
-        COMUNA_DESEADA = datos["comuna"]
-        mejor_coincidencia_comuna = encontrar_mejor_coincidencia(COMUNA_DESEADA, opciones_comuna)
-        print(f"\nMejor coincidencia para '{COMUNA_DESEADA}': {mejor_coincidencia_comuna}")
-         # Seleccionar opción deseada
-        try:
-            opcion_comuna_por_texto = WebDriverWait(driver, 10).until(
-                 EC.element_to_be_clickable((By.XPATH, f'//li[text()="{mejor_coincidencia_comuna}"]'))
-             )
-            hacer_clic_elemento_con_reintentos(driver, opcion_comuna_por_texto)
-        except Exception as e:
-            print(f"Error al seleccionar la mejor coincidencia: {e}")
-            print("____________________________________________________________________________________________________")
-
+    except:
+        print("Opciones disponibles:")
+        for opcion in select_comuna.options:
+            print(opcion.text)
+        opciones_disponibles = [opcion.text for opcion in select_comuna.options]
+        mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, dato_deseado, opcion).ratio())
+        select_comuna.select_by_visible_text(mejor_coincidencia)
+        print(f"Se selecciono la mejor coincidencia para '{dato_deseado}': {mejor_coincidencia}")
+        print("____________________________________________________________________________________________________")
+        
  # Checkbox
     cobertura_total_checkbox_locator = (By.ID, "Cobertura_Total_CheckboxSimple")
     cobertura_total_checkbox = esperar_elemento(driver, cobertura_total_checkbox_locator , 1,2,3)
@@ -411,6 +406,31 @@ try:
     cliente_nombre = datos['nombre_contratante']  # Usa el nombre del cliente como parte del nombre del archivo
     screenshot_path = os.path.join(directorio_actual, '..', 'Imagenes',f'captura_{cliente_nombre}_{timestamp}_ANS.png') 
     driver.save_screenshot(screenshot_path)
+
+# Scrap
+    html = driver.page_source
+    data = []
+    soup = BeautifulSoup(html, 'html.parser')
+    tabla = soup.find('table', {'id': 'grilla-vehiculos'})
+    if tabla:
+        filas = tabla.find_all('tr')
+        for fila in filas:
+            if fila.find(class_="companyProduct") and fila.find(class_="mb-0 d-block ufPrice"):
+                fila_data = [celda.get_text(strip=True) for celda in fila.find_all(['th', 'td'])]
+                data.append(fila_data)
+    # Crear Df
+    df = pd.DataFrame(data)
+    df.columns = ['Nombre de plan', 'S/D', 'UF-3', 'UF-5', 'UF-10','UF-15', 'UF-20','UF-25', 'UF-30']
+         #. Eliminar desde $ en adelante
+    regex = r'\$.*'
+         #. Limpiar Df excepto la primera columna 'Nombre de plan'
+    df.iloc[:, 1:] = df.iloc[:, 1:].replace(regex, '', regex=True)
+         #. Imprimir df
+    print(df)
+
+        # Guardar el DataFrame en un directorio específico
+    ruta_scrap =  os.path.join(directorio_actual, '..', 'Scrap', 'scrap_ans.txt')
+    df.to_csv(ruta_scrap, index=False)
    
 except Exception as e:
    # Registrar cualquier excepción que pueda ocurrir
