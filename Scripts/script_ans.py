@@ -21,11 +21,6 @@ import os
 #Definiciones 
 def esperar_carga_barra(driver):
     try:
-        # Espera a que la clase d-none desaparezca (es decir, la barra se muestre)
-        WebDriverWait(driver, 75).until(
-            EC.invisibility_of_element_located((By.CLASS_NAME, "d-none"))
-        )
-        # Espera a que el texto del porcentaje llegue al 100%
         WebDriverWait(driver, 75).until(
             EC.text_to_be_present_in_element((By.CLASS_NAME, "percentBarLoaderNum"), "100")
         )
@@ -34,6 +29,7 @@ def esperar_carga_barra(driver):
     except Exception as e:
         print(f"Error al esperar la carga de la barra: {str(e)}")
         return False
+    
 def seleccionar_opcion_similar(valor_manual, opciones):
         mejor_coincidencia = get_close_matches(valor_manual, opciones, n=1, cutoff=0.6)
         return mejor_coincidencia[0] if mejor_coincidencia else None
@@ -140,6 +136,8 @@ try:
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         datos_content = file.read()
         datos = eval(datos_content)
+
+    #Print datos
     print("____________________________________________________________________________________________________")
     print(datos)
     print("____________________________________________________________________________________________________")
@@ -342,58 +340,27 @@ try:
         EC.presence_of_element_located((By.ID, "select2-Comuna-results"))
     )
     opciones_comuna = elemento_comuna.find_elements(By.CSS_SELECTOR, 'li.select2-results__option')
-
+    #..Opción exacta  
     try:
-        opcion_comuna_por_texto = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, f'//li[text()="{datos["comuna"]}"]'))
-        )
-
-        if not opcion_comuna_por_texto.is_displayed():
-            driver.execute_script("arguments[0].scrollIntoView(true);", opcion_comuna_por_texto)
-        for _ in range(3):
-            try:
-                opcion_comuna_por_texto.click()
-                print(f"Se seleccionó la comuna: {datos['comuna']} sin printear la lista")
-                print("____________________________________________________________________________________________________")
-
-                break  # Si tiene éxito, salir del bucle
-            except ElementClickInterceptedException:
-                pass
-
-            except Exception as e:
-              print(f"Error al seleccionar la comuna: {e}")
-              print("____________________________________________________________________________________________________")
-
+        opcion_comuna_por_texto = hacer_clic_elemento_con_reintentos((By.XPATH, f'//li[text()="{datos["comuna"]}"]'), 1,2,3)
+       
     except Exception as e:
         print(f"Error al seleccionar la comuna: {e}")
-
- # Normalizar y ordenar las opciones
+    #.. Mejor Match
+    
         opciones_ordenadas = sorted(opciones_comuna, key=lambda x: unidecode(x.text.strip().lower()))
-
- # Imprimir todas las opciones disponibles en orden alfabético
         for opcion_comuna in opciones_ordenadas:
             print(opcion_comuna.text.strip())
-
- # Coincidencia
+        # Coincidencia
         COMUNA_DESEADA = datos["comuna"]
         mejor_coincidencia_comuna = encontrar_mejor_coincidencia(COMUNA_DESEADA, opciones_comuna)
         print(f"\nMejor coincidencia para '{COMUNA_DESEADA}': {mejor_coincidencia_comuna}")
-
-     # Seleccionar opción deseada
+         # Seleccionar opción deseada
         try:
             opcion_comuna_por_texto = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, f'//li[text()="{mejor_coincidencia_comuna}"]'))
-            )
-            if not opcion_comuna_por_texto.is_displayed():
-                driver.execute_script("arguments[0].scrollIntoView(true);", opcion_comuna_por_texto)
-
-     # Bucle click opción
-            for _ in range(3):
-                try:
-                    opcion_comuna_por_texto.click()
-                    break  # Si tiene éxito, salir del bucle
-                except ElementClickInterceptedException:
-                    time.sleep(1)  # Esperar 2 segundos y luego intentar nuevamente
+                 EC.element_to_be_clickable((By.XPATH, f'//li[text()="{mejor_coincidencia_comuna}"]'))
+             )
+            hacer_clic_elemento_con_reintentos(driver, opcion_comuna_por_texto)
         except Exception as e:
             print(f"Error al seleccionar la mejor coincidencia: {e}")
             print("____________________________________________________________________________________________________")
@@ -427,16 +394,12 @@ try:
     time.sleep(2)
 
     try:
-            # Espera a que aparezca la alerta
+            # Busca alerta a cerrar
             WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert.warning.validacionTarificacion")))
-
-            # Encuentra el botón de cerrar la alerta y haz clic en él
             close_button = driver.find_element(By.CSS_SELECTOR, ".alert.warning.validacionTarificacion .close")
             close_button.click()
     except:
-        print("no se encontraron")
-
-    print("____________________________________________________________________________________________________")
+        print("No hubo alerta que cerrar")
         
  # Scrollear pagina
     driver.execute_script("window.scrollTo(0, window.scrollY + 125)")
