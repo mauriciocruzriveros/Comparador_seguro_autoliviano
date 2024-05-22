@@ -8,6 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from datetime import datetime
+from bs4 import BeautifulSoup
+import pandas as pd
 import traceback
 import logging
 import json
@@ -93,7 +95,7 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
     print(f"No se pudo hacer click en el elemento {elemento} después de {intentos_maximos} intentos.")
     return False  # No se pudo hacer clic después de los intentos máximos
 
-# Directorio actual Script
+# Obtener el directorio actual (donde se encuentra el script)
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Configurar el registro
@@ -103,60 +105,64 @@ sys.stdout = open(log_file_path, 'w')
 sys.stderr = open(log_file_path, 'w')
 
 try:
-    # Ruta chromedriver
+ # Ruta chromedriver
     ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
     service = Service(executable_path=ruta_chromedriver)
-    driver = webdriver.Chrome(service=service)
-
+    chrome_options = Options()
+    #chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+ 
  # Datos
     datos_file_path = os.path.join(directorio_actual, '..', 'Datos','datos_rentanacional.txt')
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         # Lee el contenido del archivo y evalúa el diccionario
         datos_content = file.read()
         datos = eval(datos_content)
-        print (datos)
-
+    
+    #.. Ver Datos    
     print("_____________________________________________________________________")
+    print (datos)
+    print("_____________________________________________________________________")
+    
  
  # Registro de información
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
                 f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
+    
+    #.. Ver informe
+    print("_____________________________________________________________________")
     print(informe)
     print("_____________________________________________________________________")
+ 
+ # Inicio de página Renta
+    driver.maximize_window()
+    driver.get("https://sgi.rentanacional.cl")
 
  # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    #.. Leer el archivo JSON desde la ruta relativa
+    #.. Leer JSON
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
-    #.. Acceder a los datos
     rut = credentials['rut_rentanacional']
-    password = credentials['password_rentanacional']
-    #.. Login
-    driver.maximize_window()
-    driver.get("https://sgi.rentanacional.cl")
-    
- # Rut
+    password = credentials['password_rentanacional'] 
+    #.. Rut
     rut_locator = (By.ID, "rutInput")
     Rut = esperar_elemento(driver, rut_locator, 1 , 2,3)
     Rut.send_keys(rut)
-
- # Pass
+    #.. Pass
     password_locator = (By.ID, "passwordInput")
-    Password = esperar_elemento(driver, password_locator, 1 , 2,3)
+    Password = esperar_elemento(driver, password_locator, 1 ,2 ,3)
     Password.send_keys(password + Keys.ENTER)
-    
-    time.sleep(1)
 
     esperar_carga_completa(driver)
     
- # Vehiculo particular
+ #Vehiculo particular/comercial
+    #.. Vehiculo particular
     if datos['tipo_vehiculo'] == 'particular':
         driver.get("https://sgi.rentanacional.cl/page-simulacion-en-linea/simulador-cotizacion.php?uso=P")
         tipo_vehiculo_reporte = datos["tipo_vehiculo"]
-
- # Vehiculo comercial
+    #.. Vehiculo comercial
     else:
         driver.get("https://sgi.rentanacional.cl/page-simulacion-en-linea/simulador-cotizacion.php?uso=C")
         tipo_vehiculo_reporte = datos["tipo_vehiculo"]
@@ -164,19 +170,18 @@ try:
     time.sleep(1)
     
     esperar_carga_completa(driver)
-    
- # Persona jurídica o natural
+   
+ # Persona jurídica/natural
     label_admin_switch_locator = (By.CSS_SELECTOR, 'label[for="adminSwitchContratante"]')
     label_admin_switch = esperar_elemento(driver, label_admin_switch_locator,1)
 
- # Persona jurídica
+    #.. Persona jurídica
     if datos["tipo_persona"] == "juridica":
         hacer_clic_elemento_con_reintentos(driver, label_admin_switch)
         print("Se selecciono persona juridica")
-        #Tipo persona
+        #... Tipo persona
         tipo_persona_reporte = datos["tipo_persona"]
-
- # Rut
+        #... Rut
         rut_input_locator = (By.ID, "rut-contratante")
         rut_input = esperar_elemento(driver, rut_input_locator,1,2)
         if rut_input.is_enabled():
@@ -184,9 +189,8 @@ try:
             print(f'Nombre contratante : {datos["nombre_contratante"]} ')
         else:
             print("Rut esta deshabilitado")
-            pass
-         
- # Razón social
+            pass  
+        #... Razón social
         razon_social_locator = (By.ID, "razonSocialContratante")
         razon_social_contratante = esperar_elemento(driver, razon_social_locator,1 , 2)
         if razon_social_contratante.is_enabled():
@@ -196,15 +200,14 @@ try:
         else:
             print("Razon social esta deshabilitada")
             pass
-        
- # Campo monto
+        #... Campo monto
         campo_monto_locator = (By.ID, "montoRC")
         campo_monto = esperar_elemento(driver, campo_monto_locator, 1)
         hacer_clic_elemento_con_reintentos(driver, campo_monto)
            
- # Persona Natural
+    #.. Persona Natural
     else:
-        #Tipo persona
+        #...Tipo persona
         tipo_persona_reporte = datos["tipo_persona"]
         rut_input_locator = (By.ID, "rut-contratante")
         rut_input = esperar_elemento(driver, rut_input_locator, 1,2)
@@ -213,15 +216,13 @@ try:
             rut_input.send_keys(Keys.ENTER)
         else:
             pass
-
- # Nombre contratante
+        #... Nombre contratante
         nombre_contratante_input_locator = (By.ID, "nombreContratante")
         nombre_contratante_input = esperar_elemento(driver, nombre_contratante_input_locator, 1 ,2, 3)
         if nombre_contratante_input.is_enabled():
             nombre_contratante_input.send_keys(Keys.CONTROL + "a")
-            nombre_contratante_input.send_keys(datos["nombre_contratante"])
-        
- # Apellido    
+            nombre_contratante_input.send_keys(datos["nombre_contratante"])    
+        #... Apellido    
         apellido_contratante_locator = (By.ID, "apellidoContratante1")
         apellido_contratante = esperar_elemento(driver, apellido_contratante_locator, 1,2,3)
         if apellido_contratante.is_enabled():
@@ -238,84 +239,62 @@ try:
         print("La caja de texto sigue habilitada después de varios intentos.")
         
  # Auto nuevo / Auto usado
- # Auto nuevo 
-    # Espera a que el elemento label_materia_asegurar_switch sea clickeable
     label_materia_asegurar_switch_locator = (By.CSS_SELECTOR, 'label[for="materiaAsegurarSwitch"]')
     label_materia_asegurar_switch = esperar_elemento(driver, label_materia_asegurar_switch_locator, 1,2)
+ #.. Auto nuevo 
     if datos["uso_vehiculo"] == "nuevo":
         hacer_clic_elemento_con_reintentos(driver, label_materia_asegurar_switch)
         print("Se seleccionó Auto Nuevo")
         uso_vehiculo_reporte = datos["uso_vehiculo"]
+        
         esperar_carga_completa(driver)
-        print("_____________________________________________________________________")
-  
- # Marca
+
+        #... Marca
+        elemento_marca_locator = (By.ID, "marca")
+        MARCA = esperar_elemento(driver, elemento_marca_locator, 1)
+        hacer_clic_elemento_con_reintentos(driver, MARCA)
+
+        esperar_carga_completa
+
+        SELECT_MARCA = Select(MARCA)
+        marca_deseada = datos["marca"]
+        #...Opción exacta
         try:
-            elemento_barra_desplegable_locator = (By.ID, "marca")
-            elemento_barra_desplegable = esperar_elemento(driver, elemento_barra_desplegable_locator, 1)
-            hacer_clic_elemento_con_reintentos(driver, elemento_barra_desplegable)
-            marca_select_locator = (By.XPATH, '//select[@id="marca"]/option[@value!=""][text()!="Seleccione ..."]')
-            marca_select_element = esperar_elemento(driver, marca_select_locator,1 , 2)
-            select = Select(driver.find_element(By.ID, "marca"))
-            opciones_marca = [opcion.text for opcion in select.options]
-            #Lista de marcas
-            print("Opciones de la barra desplegable:")
-            opciones_str = '[' + ', '.join(opciones_marca) + ']'
-            print(opciones_str)
-            opcion_mas_cercana_marca = get_close_matches(datos["marca_rentanacional"], opciones_marca, n=1)
-            if opcion_mas_cercana_marca:
-                seleccion = opcion_mas_cercana_marca[0]
-                select.select_by_visible_text(seleccion)
-                print(f"Opción seleccionada: {seleccion}")
- # Verificar si la elección fue exacta o no
-                if seleccion == datos["marca_rentanacional"]:
-                    marca_reporte = datos["marca_rentanacional"]
-                    print("La elección se hizo con una coincidencia exacta.")
-                else:
-                    marca_reporte = seleccion
-                    print("La elección se hizo con la coincidencia más cercana.")
-            else:
-                print("No se encontró una coincidencia cercana.")
-            print("_____________________________________________________________________")
-        except TimeoutException:
-            print("Tiempo de espera agotado al esperar la presencia del elemento o la selección de la opción.")
-        except Exception as e:
-            print(f"Se produjo un error inesperado: {e}")
+            SELECT_MARCA.select_by_visible_text(marca_deseada)
+            print(f"Se selecciono de forma exacta la opcion {marca_deseada}")
+        except:
+            print("Opciones disponibles")
+            for opcion in SELECT_MARCA.options:
+                print(opcion.text)
+            opciones_disponibles = [opcion.text for opcion in SELECT_MARCA.options]
+            mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, marca_deseada, opcion).ratio())
+            SELECT_MARCA.select_by_visible_text(mejor_coincidencia)
+            print(f"Se selecciono la mejor coincidencia para {marca_deseada}: {mejor_coincidencia}")
+
+        esperar_carga_completa(driver)
         
  # Modelo
+        elemento_modelo_locator = (By.ID, "modelo")
+        MODELO = esperar_elemento(driver, elemento_modelo_locator, 1)
+        hacer_clic_elemento_con_reintentos(driver, MODELO)
+
         esperar_carga_completa(driver)
-        elemento_barra_modelo_locator = (By.ID, "modelo")
-        elemento_barra_modelo = esperar_elemento(driver, elemento_barra_modelo_locator, 1)
-        hacer_clic_elemento_con_reintentos(driver,elemento_barra_modelo)
+
+        SELECT_MODELO = Select(MODELO)
+        modelo_deseado = datos["modelo"]
+        #.. Opción exacta
         try:
-            modelo_select_locator = (By.XPATH, '//select[@id="modelo"]/option[text()!="Seleccione ..."]')
-            modelo_select_element = esperar_elemento(driver, modelo_select_locator, 1)
-            select_modelo = Select(elemento_barra_modelo)
-            opciones_modelo = [opcion.text for opcion in select_modelo.options]
-
- # Lista de modelos
-            print("Opciones de la barra desplegable de modelos:")
-            modelo_str = '[' + ', '.join(opciones_modelo) + ']'
-            print(modelo_str)
-            opcion_mas_cercana_modelo = get_close_matches(datos["modelo_rentanacional"], opciones_modelo, n=1)
-            if opcion_mas_cercana_modelo:
-                seleccion_modelo = opcion_mas_cercana_modelo[0]
-                select_modelo.select_by_visible_text(seleccion_modelo)
-                print(f"Opción de modelo seleccionada: {seleccion_modelo}")
-                # Verificar si la elección fue exacta o no
-                if seleccion_modelo == datos["modelo_rentanacional"]:
-                    print("La elección se hizo con una coincidencia exacta.")
-                    modelo_reporte = datos["modelo_rentanacional"]
-                else:
-                    modelo_reporte = seleccion_modelo
-                    print("La elección se hizo con la coincidencia más cercana.")
-            else:
-                print(f"No se encontró una coincidencia cercana para el modelo {datos['modelo_rentanacional']}.")
-
-
-        except TimeoutException:
-            print("Tiempo de espera agotado. No se pudo cargar la lista de opciones de modelos.")
-        print("_____________________________________________________________________")
+            SELECT_MODELO.select_by_visible_text(modelo_deseado)
+            print(f"Se selecciono { modelo_deseado} de manera exacta")
+        #.. Mejor coincidencia
+        except:
+            print("Opciones disponibles:")
+            for opcion in SELECT_MODELO.options:
+                print(opcion.text)
+            opciones_disponibles = [opcion.text for opcion in SELECT_MODELO.options]
+            mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, modelo_deseado, opcion).ratio())
+            SELECT_MODELO.select_by_visible_text(mejor_coincidencia)
+            print(f"Se selecciona la mejor coincidencia para '{modelo_deseado}': {mejor_coincidencia}")
         
         esperar_carga_completa(driver)
 
@@ -326,12 +305,12 @@ try:
         opciones_ano = [opcion.text for opcion in select_ano.options]
         print(opciones_ano)
         select_ano.select_by_value(datos["ano"]) # Corregir aquí
-        print("_____________________________________________________")
         print(f"Se seleccionó la opción {datos['ano']}")
+        
         esperar_carga_completa(driver) 
 
- # Auto usado
- # Patente
+ #.. Auto usado
+    #.. Patente
     else: 
         patente_auto_locator = (By.ID, "patenteUsado")
         patente_auto = esperar_elemento(driver, patente_auto_locator, 1)
@@ -341,49 +320,26 @@ try:
         hacer_clic_elemento_con_reintentos(driver, campo_monto)
         esperar_carga_completa(driver)
         uso_vehiculo_reporte = datos["uso_vehiculo"]
-        print("_____________________________________________________________________")
        
- # Modelo
+    # Modelo
+        select_modelo_locator = (By.CLASS_NAME, "swal2-select")
+        MODELO = esperar_elemento(driver, select_modelo_locator, 1)
+        SELECT_MODELO = Select(MODELO)
+        modelo_deseado = datos["modelo"]
+        #.. Opción exacta
         try:
-            select_element_locator = (By.CLASS_NAME, "swal2-select")
-            select_element = esperar_elemento(driver, select_element_locator, 1)
-            select = Select(select_element)
-            try:
-                select.select_by_value(datos["modelo_rentanacional"])
-                print(f"Opción de modelo seleccionada directamente: {datos['modelo_rentanacional']}")
-                modelo_reporte = datos["modelo"]
-            except NoSuchElementException:
-                print("Modelos disponibles en el cuadro de diálogo:")
-                modelos_disponibles = [option.text for option in select.options][1:]  # Excluir la opción deshabilitada
-                print(modelos_disponibles)
-                modelo_a_buscar = datos["modelo_rentanacional"]
-                best_match_modelo = max(modelos_disponibles, key=lambda modelo: SequenceMatcher(None, modelo, modelo_a_buscar).ratio())
-                if best_match_modelo == modelo_a_buscar:
-                    print("¡Coincidencia exacta encontrada:", best_match_modelo)
-                    modelo_reporte = datos["modelo_rentanacional"]
-                    
-                else:
-                    
-                    print("Mejor match encontrado, pero no es una coincidencia exacta. Mejor match:", best_match_modelo, "Match a buscar:", modelo_a_buscar)
-                    # Seleccionar la opción por el texto visible
-                    opcion_a_seleccionar = best_match_modelo
-                    select.select_by_visible_text(opcion_a_seleccionar)
-                    modelo_reporte = best_match_modelo
-            
-            confirm_locator = (By.CLASS_NAME, 'swal2-confirm')
-            boton_confirm = esperar_elemento(driver, confirm_locator ,1,2,3)
-            hacer_clic_elemento_con_reintentos(driver, boton_confirm)
-            marca_reporte = datos["marca"]
-            print("_____________________________________________________________________")
-
-        except NoSuchElementException as e:
-            print("Error: El cuadro de diálogo con la lista desplegable no se encontró en la página.")
-            print(f"Detalles del error: {str(e)}")
-
-        except Exception as e:
-            print(f"Ocurrió un error inesperado: {e}")
-            print(f"Detalles del error: {str(e)}")
-
+            SELECT_MODELO.select_by_visible_text(modelo_deseado)
+            print(f"Se selecciono { modelo_deseado} de manera exacta")
+        #.. Mejor coincidencia
+        except:
+            print("Opciones disponibles:")
+            for opcion in SELECT_MODELO.options:
+                print(opcion.text)
+            opciones_disponibles = [opcion.text for opcion in SELECT_MODELO.options]
+            mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, modelo_deseado, opcion).ratio())
+            SELECT_MODELO.select_by_visible_text(mejor_coincidencia)
+            print(f"Se selecciona la mejor coincidencia para '{modelo_deseado}': {mejor_coincidencia}")
+    
     time.sleep(1)
 
     esperar_carga_completa(driver)
@@ -396,6 +352,32 @@ try:
     cliente_nombre = datos['nombre_contratante']  # Usa el nombre del cliente como parte del nombre del archivo
     screenshot_path =   os.path.join(directorio_actual, '..', 'Imagenes',f'captura_{cliente_nombre}_{timestamp}_rentanacional.png')
     driver.save_screenshot(screenshot_path)
+
+#  # Scrap
+#     html = driver.page_source
+#     soup = BeautifulSoup(html, 'html.parser')
+#     planes = soup.find_all(class_='change_precio')
+#     data = {'Tipo de plan': [], 'ID': [], 'Prima Anual': []}
+#     for i, plan in enumerate(planes):
+#         nombre_plan = plan.find('h4', class_='card-plan__title').text
+#         prima_anual = float(plan.find('span', id=f'primaAnualPlan_{i}').text.replace(',', '.'))  # Convertir directamente a float
+#         palabras = nombre_plan.split()
+#         ID = palabras[-1] if palabras[-1][0] == 'D' else 'Otros'
+#         tipo_plan = ' '.join(palabras[:-1]) if ID != 'Otros' else nombre_plan  # Obtener el tipo de plan o el plan completo si no hay ID
+#         data['Tipo de plan'].append(tipo_plan)
+#         data['ID'].append(ID)
+#         data['Prima Anual'].append(prima_anual)
+#     df = pd.DataFrame(data)
+#     df['Otros'] = df['Prima Anual'].where(df['ID'] == 'Otros')
+#     df = df.pivot_table(index='Tipo de plan', columns='ID', values='Prima Anual', aggfunc='sum').reset_index()
+#     IDs_sorted = sorted([col for col in df.columns if col.startswith('D-')], key=lambda x: int(x.split('-')[1]))
+#     df = df[['Tipo de plan', 'Otros'] + IDs_sorted]
+#     df = df.sort_values(by='Tipo de plan').reset_index(drop=True)
+#     #. Ver Df
+#     print(df)
+#     #. Guardar Df
+#     ruta_scrap = os.path.join(directorio_actual, '..', 'Scrap', 'scrap_renta.csv')
+#     df.to_csv(ruta_scrap, index=False)
 
 except Exception as e:
     print(f"Error: {str(e)}")
