@@ -3,11 +3,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from difflib import SequenceMatcher, get_close_matches
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from datetime import datetime
+from bs4 import BeautifulSoup
+import pandas as pd
 import traceback
 import logging
 import json
@@ -15,7 +18,6 @@ import time
 import sys
 import os
 
-# Definiciones
 def esperar_elemento(driver, locator, *numeros_condiciones, max_intentos=5):
         condiciones = {
             1: EC.presence_of_element_located,
@@ -83,50 +85,58 @@ def hacer_clic_elemento_con_reintentos_js(driver, elemento, intentos_maximos=3):
 
 # Obtener el directorio actual (donde se encuentra el script)
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
+# Configurar el registro
+log_file_path = os.path.join(directorio_actual, '..', 'Reportes','reporte_liberty.txt') 
+logging.basicConfig(filename=log_file_path, level=logging.INFO)
+sys.stdout = open(log_file_path, 'w')
+sys.stderr = open(log_file_path, 'w')
 
 try:
- # Configurar el registro
-    log_file_path = os.path.join(directorio_actual, '..', 'Reportes','reporte_liberty.txt') 
-    logging.basicConfig(filename=log_file_path, level=logging.INFO)
-    sys.stdout = open(log_file_path, 'w')
-    sys.stderr = open(log_file_path, 'w')
-
  # Ruta de chromedriver
     service = Service(executable_path=os.path.join(directorio_actual, '..', 'chromedriver.exe'))
-    driver = webdriver.Chrome(service=service)
+    chrome_options = Options()
+    #chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
  # Datos
     datos_file_path =  os.path.join(directorio_actual, '..', 'Datos', 'datos_liberty.txt') 
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         datos_content = file.read()
         datos = eval(datos_content)
+    
+    #. Mostrar Datos
+    print("____________________________________________________________________________")    
     print(datos)
+    print("____________________________________________________________________________")
         
  # Registro de información
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
               f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
+    
+    #. Mostrar información
+    print("____________________________________________________________________________")
     print(informe)
     print("____________________________________________________________________________")
 
-
+ # Inicio de página Liberty
+    driver.maximize_window()
+    driver.get("https://www.liberty.cl/menu_aplicaciones/viewLogin")
 
  # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    #.. Leer el archivo JSON desde la ruta relativa
+    #.. Leer JSON
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
     rut = credentials['rut_liberty']
     password = credentials['password_liberty']
+    numero_corredor = credentials['numero_corredor']
     email = credentials['email']
-    #.. Login
-    driver.maximize_window()
-    driver.get("https://www.liberty.cl/menu_aplicaciones/viewLogin")
-
+    #.. Rut
     RUT_LIBERTY_locator = (By.CLASS_NAME, "nomUsuario")
     RUT_LIBERTY = esperar_elemento(driver, RUT_LIBERTY_locator, 1)
     RUT_LIBERTY.send_keys(rut)
-
+    #.. Password
     PASSWORD_LIBERTY_locator = (By.ID, "j_password")
     PASSWORD_LIBERTY = esperar_elemento(driver, PASSWORD_LIBERTY_locator, 1)
     PASSWORD_LIBERTY.send_keys(password + Keys.ENTER)
@@ -135,6 +145,7 @@ try:
     boton_inicio_locator = (By.XPATH, "//div[@id='bot1']//a[@id='10']")
     BOTON_INICIO = esperar_elemento(driver, boton_inicio_locator, 1,2,3)
     hacer_clic_elemento_con_reintentos(driver, BOTON_INICIO)
+    
     espera_pagina_cargada(driver)
 
  # Botón vehiculo liviano 
@@ -159,7 +170,8 @@ try:
         pass
 
     espera_pagina_cargada(driver)
-
+    
+ # Tipo persona : Natural
     if datos["tipo_persona"] == "natural":
         nombre_input_liberty_locator = (By.ID, "name")
         nombre_input_liberty = esperar_elemento(driver, nombre_input_liberty_locator, 1,2)
@@ -169,13 +181,16 @@ try:
        
         espera_pagina_cargada(driver)
         
- # Apellido
+     #.. Apellido
         apellido_input_liberty_locator = (By.ID, "lastname")
         apellido_input_liberty = esperar_elemento(driver, apellido_input_liberty_locator, 1,2)
         apellido_input_liberty.send_keys(Keys.CONTROL + "a")
         apellido_input_liberty.send_keys(Keys.DELETE)
         apellido_input_liberty.send_keys(datos["apellido_contratante"])
+        
         espera_pagina_cargada(driver)
+
+ # Tipo persona : Jurídica
     else:
         razon_social_locator = (By.ID, "razonsocial")
         razon_social = esperar_elemento(driver, razon_social_locator, 1,2)
@@ -203,7 +218,7 @@ try:
     if phone_input_liberty.is_enabled:
         phone_input_liberty.send_keys(Keys.CONTROL + "a")
         phone_input_liberty.send_keys(Keys.DELETE)
-        phone_input_liberty.send_keys("+56979425896")
+        phone_input_liberty.send_keys(numero_corredor)
     else:
         pass
 
@@ -236,20 +251,19 @@ try:
             vehiculo_usado = esperar_elemento(driver, vehiculo_usado_locator, 1,2,3)
             hacer_clic_elemento_con_reintentos(driver, vehiculo_usado)
  
- # Vehiculo particular o comercial
+ # TVehiculo particular/comercial
     select_element_locator = (By.ID, "mui-component-select-vehUse")
     select_element = esperar_elemento(driver, select_element_locator, 1,2,3)
     hacer_clic_elemento_con_reintentos(driver, select_element)
 
-    if datos["tipo_vehiculo"] == "particular":
-
- # Vehiculo particular                     
+    #.. Vehiculo particular 
+    if datos["tipo_vehiculo"] == "particular":                    
         option_particular_locator = (By.XPATH, '//li[@data-value="1"]')
         option_particular = esperar_elemento(driver, option_particular_locator, 1 ,2,3)
         hacer_clic_elemento_con_reintentos(driver, option_particular)
-        
+    
+    #.. Vehiculo comercial     
     else:  
- # Vehiculo comercial
         option_comercial_locator = (By.XPATH, '//li[@data-value="2"]')
         option_comercial = esperar_elemento(driver, option_comercial_locator, 1,2, 3)
         hacer_clic_elemento_con_reintentos(driver, option_comercial)
@@ -269,9 +283,8 @@ try:
     patente_input_liberty_locator = (By.ID, "plate")
     patente_input_liberty = esperar_elemento(driver, patente_input_liberty_locator, 1 ,2, 3)
     if patente_input_liberty:
-        patente_input_liberty.click()
-        patente_input_liberty.send_keys(Keys.CONTROL + "a")
-        patente_input_liberty.send_keys(Keys.DELETE)
+        hacer_clic_elemento_con_reintentos(driver, patente_input_liberty)
+        patente_input_liberty.clear()
         patente_input_liberty.send_keys(datos["patente"])
     else:
         print("El elemento 'plate' no se encontró después de varios intentos.")
@@ -340,12 +353,12 @@ try:
 
  # Año de vehiculo
     ano_locator = (By.ID, "mui-component-select-vehYear")
-    element_ano = esperar_elemento(driver,ano_locator , 1 , 2 ,3)
+    ANO = esperar_elemento(driver,ano_locator , 1 , 2 ,3)
     espera_pagina_cargada(driver)
-    hacer_clic_elemento_con_reintentos(driver, element_ano)
+    hacer_clic_elemento_con_reintentos(driver, ANO)
     opciones_ano_locator = (By.CLASS_NAME, "MuiList-root")
-    opciones_ano_element = esperar_elemento(driver, opciones_ano_locator, 1, 2, 3)
-    opciones_ano = opciones_ano_element.find_elements(By.CLASS_NAME, "MuiListItem-root")
+    OPCIONES_ANO = esperar_elemento(driver, opciones_ano_locator, 1, 2, 3)
+    opciones_ano = OPCIONES_ANO.find_elements(By.CLASS_NAME, "MuiListItem-root")
     lista_opciones_ano = [opcion.text for opcion in opciones_ano if opcion.text]
     print(lista_opciones_ano)
     # Año deseado
@@ -364,10 +377,10 @@ try:
 
  # Continuar
     continuar_button_locator = (By.XPATH, "//span[text()='Continuar']")
-    continuar_button = esperar_elemento(driver, continuar_button_locator, 3)
-    if continuar_button:
+    CONTINUAR = esperar_elemento(driver, continuar_button_locator, 3)
+    if CONTINUAR:
         print("Haciendo clic en el botón Continuar...")
-        hacer_clic_elemento_con_reintentos(driver, continuar_button)      
+        hacer_clic_elemento_con_reintentos(driver, CONTINUAR)      
     else:
         print("No se encontró el botón Continuar después de varios intentos.")
     
@@ -382,14 +395,42 @@ try:
     # Hacer clic en el botón de cierre
     #hacer_clic_elemento_con_reintentos_js(driver, BOTON_CIERRE)
      
-    #.. Scrollear Página
+ # Desplazar página
     driver.execute_script("window.scrollTo(0, window.scrollY + 500)")
     
-    #.. Pantallazo
+ # Pantallazo
     timestamp = time.strftime("%Y%m%d_%H%M%S")  
     cliente_nombre = datos['nombre_contratante']   
     screenshot_path = os.path.join(directorio_actual, '..', 'Imagenes', f'captura_{cliente_nombre}_{timestamp}_liberty.png') 
     driver.save_screenshot(screenshot_path)
+
+#  # Scrap
+#     html= driver.page_source
+#     soup = BeautifulSoup(html, 'html.parser')
+#     cartas = soup.find_all('div', class_="MuiPaper-root MuiAccordion-root jss217 Mui-expanded jss218 MuiAccordion-rounded MuiPaper-elevation1 MuiPaper-rounded")
+#     filas = []
+#     for elemento in cartas:
+#         tipo_plan_elemento = elemento.find('p', class_='MuiTypography-root jss197 MuiTypography-body1')
+#         if tipo_plan_elemento:
+#             tipo_plan = tipo_plan_elemento.text
+#             elementos_planes = elemento.find_all('p', class_='MuiTypography-root jss223 MuiTypography-body1')
+#             deducible = ''
+#             prima_anual = ''
+#             for elem in elementos_planes:
+#                 if 'Deducible' in elem.text:
+#                     deducible = elem.text
+#                 elif 'Anual' in elem.text:
+#                     prima_anual = elem.text
+#                     # Añadir las filas al DataFrame
+#                     filas.append([tipo_plan, deducible, prima_anual])
+
+#     #. Crear Df
+#     df = pd.DataFrame(filas, columns=['Tipo de plan', 'Deducible', 'Prima anual'])
+#     #. Mostrar Df
+#     print(df)
+#     #. Guardar Df
+#     ruta_scrap = os.path.join(directorio_actual, '..', 'Scrap', 'scrap_liberty.csv')
+#     df.to_csv(ruta_scrap, index=False)
     
 except Exception as e:
     error_msg = f"Error: {str(e)}"

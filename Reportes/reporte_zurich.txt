@@ -1,0 +1,573 @@
+____________________________________________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': 'No aplica', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR'}
+____________________________________________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 02:34:23
+____________________________________________________________________________________________________
+Elemento ('css selector', '.input-user input') encontrado.
+Elemento ('css selector', '.input-user input[type="password"]') encontrado.
+Elemento ('class name', 'btn-continue') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'Cotizadores-Seguros-Individuales-Automovil') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('class name', 'btn-continue--active') encontrado.
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'Boton-Modal-Cotizadores-Cotizar') encontrado.
+Clic en el elemento realizado correctamente.
+Error al esperar la carga completa de la página: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797B77676]
+	(No symbol) [0x00007FF797B7773C]
+	(No symbol) [0x00007FF797BBE967]
+	(No symbol) [0x00007FF797B9C25F]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+Identificadores de ventanas abiertas: ['2E50CA92047B66988B79FBCDBFD058AD', '25141A0B920B0791E1FB2573EC67BDA1']
+Se encontraron ventanas emergentes adicionales.
+Se cambió al contexto de la ventana principal
+Elemento ('xpath', '//input[@id="detalle_rdbUsado_0" and @value="S"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'detalle_txtPatente') encontrado.
+La página ha cargado completamente.
+Elemento ('id', 'detalle_cboMarca') encontrado.
+La página ha cargado completamente.
+Elemento ('id', 'detalle_cboModelo') encontrado.
+Se seleccionó el modelo deseado: VERSA
+Elemento ('id', 'detalle_cboAno') encontrado.
+Elemento ('id', 'detalle_cboUso') encontrado.
+Elemento ('id', 'detalle_txtRut') encontrado.
+Error al esperar la carga completa de la página: Message: 
+
+Elemento ('id', 'detalle_txtAuxNombres') encontrado.
+Elemento ('id', 'detalle_cboComuna') encontrado.
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+No se pudo hacer click en el elemento <selenium.webdriver.remote.webelement.WebElement (session="b34c5fdfa356f615b945a601ba8c73c4", element="f.25141A0B920B0791E1FB2573EC67BDA1.d.08ABBBC26C00E7E49052A67DDD3CB02C.e.56")> después de 3 intentos.
+Opciones disponibles de comuna:
+ACHAO
+ACULEO
+AISEN
+ALERCE
+ALGARROBO
+ALHUE
+ALTO DEL CARMEN
+ALTO HOSPICIO
+ALTO JAHUEL
+ANCUD
+ANDACOLLO
+ANGOL
+ANTARTICA
+ANTIGUALA
+ANTILHUE
+ANTOFAGASTA
+ANTUCO
+AQUELARRE
+ARAUCO
+ARICA
+BALMACEDA
+BAQUEDANO
+BARRANCAS
+BATUCO
+BOROA
+BUIN
+BULNES
+CABILDO
+CABO DE HORNOS
+CABRERO
+CABURGUA
+CACHAGUA
+CAJON
+CALAMA
+CALBUCO
+CALDERA
+CALERA
+CALERA DE TANGO
+CALETA TUMBES
+CALLE LARGA
+CAMARICO
+CAMARONES
+CAMIÑA
+CANCURA
+CANELA BAJA
+CAÑETE
+CAPITAN PASTENE
+CARAHUE
+CARAMPANGUE
+CARELMAPU
+CARTAGENA
+CASABLANCA
+CASTRO
+CATAPILCO
+CATEMU
+CAUQUENES
+CERRILLOS
+CERRO NAVIA
+CERRO SOMBRERO
+CHACAO
+CHAITEN
+CHAÑARAL
+CHANCO
+CHANQUEAHUE
+CHARRUA
+CHEPICA
+CHERQUENCO
+CHIGUAYANTE
+CHILE CHICO
+CHILLAN
+CHILLAN VIEJO
+CHILLANCITO
+CHIMBARONGO
+CHOLCHOL
+CHONCHI
+CHOSHUENCO
+CHUQUICAMATA
+CISNES
+COBQUECURA
+COCHAMO
+COCHARCAS
+COCHRANE
+CODAO
+CODEGUA
+COELEMU
+COIHUECO
+COINCO
+COLBUN
+COLCHAGUA
+COLCHANE
+COLIN
+COLINA
+COLIUMO
+COLLIGUAY
+COLLIPULLI
+COLTAUCO
+COMALLE
+COMBARBALA
+COÑARIPE
+CONCEPCION
+CONCHALI
+CONCON
+CONSTITUCION
+CONTULMO
+COPIAPO
+COQUIMBO
+CORONEL
+CORRAL
+CORTE ALTO
+COSTA AZUL
+COYA
+COYHAIQUE
+CUMPEO
+CUNACO
+CUNCO
+CUNCUMEN
+CURACAUTIN
+CURACAVI
+CURACO DE VELEZ
+CURANILAHUE
+CURARREHUE
+CUREPTO
+CURICO
+CURIMON
+DALCAHUE
+DICHATO
+DIEGO DE ALMAGRO
+DOMEYKO
+DOÑIHUE
+EL BOSQUE
+EL CARMEN
+EL MANZANAR
+EL MELON
+EL MONTE
+EL PAICO
+EL PALQUI
+EL QUISCO
+EL SALADO
+EL SALVADOR
+EL TABO
+EL VOLCAN
+EL VOLCAN
+EMPEDRADO
+ENTRE LAGOS
+ERCILLA
+ESTACION CENTRAL
+ESTACIÓN OCOA
+FARELLONES
+FLORIDA
+FREIRE
+FREIRINA
+FRESIA
+FRUTILLAR
+FUTALEUFU
+FUTRONO
+GALVARINO
+GENERAL LOPEZ
+GORBEA
+GRAL LAGOS
+GRANEROS
+GUAITECAS
+GUALPIN
+GUANAQUEROS
+GUAYACAN
+HIJUELAS
+HOSPITAL
+HUALAIHUE
+HUALAÑE
+HUALPEN
+HUALQUI
+HUARA
+HUASCO
+HUECHURABA
+HUEPIL
+HUILQUILEMU
+IDAHUE
+ILLAPEL
+ILOCA
+INCA DE ORO
+INDEPENDENCIA
+IQUIQUE
+ISLA DE MAIPO
+ISLA DE PASCUA
+ISLA NEGRA
+ISLA QUIRIQUINA
+ISLA TEJA
+LA CISTERNA
+LA CRUZ
+LA ESTRELLA
+LA FLORIDA
+LA GRANJA
+LA HIGUERA
+LA LAJA
+LA LIGUA
+LA PAZ
+LA PINTANA
+LA REINA
+LA SERENA
+LA UNION
+LA VICTORIA
+LABRANZA
+LAGO RANCO
+LAGO RAPEL
+LAGO VERDE
+LAGO VICHUQUEN
+LAGUNA BLANCA
+LAGUNA VERDE
+LAMPA
+LANCO
+LARAQUETE
+LAS CABRAS
+LAS CONDES
+LAS CRUCES
+LAS VENTANAS
+LAS VERTIENTES
+LAUTARO
+LEBU
+LICAN RAY
+LICANTEN
+LIMA
+LIMACHE
+LIMARI
+LINARES
+LINDEROS
+LIRQUEN
+LITUECHE
+LLAILLAY
+LLANQUIHUE
+LLICO
+LLIFEN
+LLOLLEO
+LO BARNECHEA
+LO ESPEJO
+LO MIRANDA
+LO PRADO
+LOLOL
+LONCOCHE
+LONCURA
+LONGAVI
+LONQUIMAY
+LONTUE
+LOS ALAMOS
+LOS ANDES
+LOS ANGELES
+LOS LAGOS
+LOS LIRIOS
+LOS LLEUQUES
+LOS LOROS
+LOS MOLLES
+LOS MUERMOS
+LOS QUEÑES
+LOS SAUCES
+LOS VILOS
+LOTA
+LUMACO
+MACHALI
+MACUL
+MAFIL
+MAIPO
+MAIPU
+MAITENCILLO
+MALALHUE
+MALLARAUCO
+MALLOA
+MALLOCO
+MAMIÑA
+MARACAIBO
+MARBELLA
+MARCHIHUE
+MARIA ELENA
+MARIA PINTO
+MARIQUINA
+MATANZAS
+MAULE
+MAULLIN
+MEHUIN
+MEJILLONES
+MELEFQUEN
+MELINKA
+MELIPEUCO
+MELIPILLA
+MELOCOTON
+MINCHA
+MININCO
+MOLINA
+MONTE AGUILA
+MONTE PATRIA
+MULCHEN
+NACIMIENTO
+NANCAGUA
+NATALES
+NAVIDAD
+NEBUCO
+NEGRETE
+NIEBLA
+NINHUE
+ÑIPAS
+ÑIQUEN
+NOGALES
+NOS
+NUEVA IMPERIAL
+ÑUÑOA
+O`HIGGINS
+OF. P. DE VALDIVIA
+OF.JOSE FCO VERGARA
+OF.VICTORIA
+OLIVAR ALTO
+OLLAGUE
+OLMUE
+OSORNO
+OTROS PUEBLOS I REGION
+OTROS PUEBLOS II REGION
+OTROS PUEBLOS III REGION
+OTROS PUEBLOS IV REGION
+OTROS PUEBLOS IX REGION
+OTROS PUEBLOS REGION METROPOLI
+OTROS PUEBLOS V REGION
+OTROS PUEBLOS VI REGION
+OTROS PUEBLOS VII REGION
+OTROS PUEBLOS VIII REGION
+OTROS PUEBLOS X REGION
+OTROS PUEBLOS XI REGION
+OTROS PUEBLOS XII REGION
+OTROS PUEBLOS XIV REGION
+OTROS PUEBLOS XV REGION
+OVALLE
+PADRE HURTADO
+PADRE LAS CASAS
+PAIHUANO
+PAILAHUEQUE
+PAILLACO
+PAINE
+PAIPOTE
+PALENA
+PALMILLA
+PANGUILEMO
+PANGUIPULLI
+PANIMAVIDA
+PANQUEHUE
+PAPUDO
+PAREDONES
+PARGUA
+PARRAL
+PEDRO AGUIRRE CERDA
+PELARCO
+PELCHUQUIN
+PELEQUEN
+PELLUHUE
+PEMUCO
+PEÑABLANCA
+PEÑAFLOR
+PEÑALOLEN
+PENCAHUE
+PENCO
+PERALILLO
+PERQUENCO
+PERU
+PETORCA
+PETROHUE
+PEUMO
+PICA
+PICHIDANGUI
+PICHIDEGUA
+PICHILEMU
+PICHIRROPULLI
+PILLANLELBUN
+PINTO
+PIRQUE
+PISCO ELQUI
+PITRUFQUEN
+PLACILLA
+POBLACION
+POLCURA
+POLONIA
+POLPAICO
+POMAIRE
+PORTEZUELO
+PORVENIR
+POTRERILLOS
+POZO ALMONTE
+PRIMAVERA
+PROVIDENCIA
+PUANGUE
+PUAUCHO
+PUCATRIHUE
+PUCHUNCAVI
+PUCON
+PUDAHUEL
+PUENTE ALTO
+PUERTO AGUIRRE
+PUERTO CHACABUCO
+PUERTO CRISTAL
+PUERTO DOMINGUEZ
+PUERTO GUADAL
+PUERTO MONTT
+PUERTO OCTAY
+PUERTO PUYUHUAPI
+PUERTO VARAS
+PUERTO WILLIAMS
+PUMANQUE
+PUNITAQUI
+PUNTA ARENAS
+PUNTA DE TRALCA
+PUQUELDON
+PUREN
+PURRANQUE
+PURULON
+PUTAENDO
+PUTRE
+PUYEHUE
+QUEILEN
+QUELLON
+QUEMCHI
+QUEPE
+QUEULE
+QUIDICO
+QUILACO
+QUILICURA
+QUILLECO
+QUILLEN
+QUILLON
+QUILLOTA
+QUILPUE
+QUINCHAO
+QUINO
+QUINTA DE TILCOCO
+QUINTA NORMAL
+QUINTAY
+QUINTERO
+QUIRIHUE
+QUITRAHUE
+RADAL
+RAFAEL
+RAHUE
+RALCO
+RANCAGUA
+RANQUIL
+RAUCO
+RECINTO
+Error: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=125.0.6422.113); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797B2DCEE]
+	(No symbol) [0x00007FF797B30641]
+	(No symbol) [0x00007FF797B306E0]
+	(No symbol) [0x00007FF797B714FB]
+	(No symbol) [0x00007FF797B9C21A]
+	(No symbol) [0x00007FF797B6ADB6]
+	(No symbol) [0x00007FF797B9C430]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+Traceback (most recent call last):
+  File "c:\Users\mauri\Desktop\App Autos Livianos\Scripts\script_zurich.py", line 317, in <module>
+    print(opcion_comuna.text.strip())
+          ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 89, in text
+    return self._execute(Command.GET_ELEMENT_TEXT)["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 394, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 347, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 229, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.StaleElementReferenceException: Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=125.0.6422.113); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797B2DCEE]
+	(No symbol) [0x00007FF797B30641]
+	(No symbol) [0x00007FF797B306E0]
+	(No symbol) [0x00007FF797B714FB]
+	(No symbol) [0x00007FF797B9C21A]
+	(No symbol) [0x00007FF797B6ADB6]
+	(No symbol) [0x00007FF797B9C430]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+

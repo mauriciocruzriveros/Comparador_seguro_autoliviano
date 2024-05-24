@@ -1,0 +1,73 @@
+____________________________________________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': 'No aplica', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR - VALPARAÍSO'}
+____________________________________________________________________________________________________
+____________________________________________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 02:42:55
+____________________________________________________________________________________________________
+Elemento ('id', 'username') encontrado.
+Elemento ('id', 'password') encontrado.
+Elemento ('xpath', '//*[contains(text(), "liviano")]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'tipoPersona') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//option[@value="1: 41"]') encontrado.
+Persona : Natural
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'rut') encontrado.
+Rut: 202087000
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'firstName') encontrado.
+El campo 'nombre' estaba autocompletado
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'lastName') encontrado.
+El campo 'apellido' estaba autocompletado
+________________________________________________________
+El overlay ha desaparecido
+El overlay ha desaparecido
+Elemento ('id', 'email') encontrado.
+El overlay ha desaparecido
+Elemento ('id', 'comuna') encontrado.
+Se selecciono comuna VIÑA DEL MAR - VALPARAÍSO
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('name', 'submit') encontrado.
+Clic en el elemento realizado correctamente.
+El overlay ha desaparecido
+Elemento ('id', 'nuevoUsado') encontrado.
+Uso vehiculo = Usado
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'patente') encontrado.
+Patente = HPPL93
+________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'anio') encontrado.
+Clic en el elemento realizado correctamente.
+El overlay ha desaparecido
+Seleccion de año no está habilitada. No se seleccionará ningún año.
+_____________________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'marca') encontrado.
+El overlay ha desaparecido
+Elemento ('id', 'modelo') encontrado.
+El overlay ha desaparecido
+Elemento ('id', 'version') encontrado.
+Elemento ('id', 'uso') encontrado.
+Vehiculo : Particular
+_____________________________________________________________________
+El overlay ha desaparecido
+Elemento ('id', 'tipoCombustible') encontrado.
+El overlay ha desaparecido
+Elemento ('id', 'kmAlAnio') encontrado.
+El overlay ha desaparecido
+Elemento ('id', 'companiaAnterior') encontrado.
+El overlay ha desaparecido
+                        Planes     S     M  L(0)  L(3)  L(5) L(10)
+0  MEDIOS DE PAGO / DEDUCIBLES  None  None  None  None  None  None
+1                          PAT                                    
+2                          PAC                                    
+3                        Aviso                                    
+4                      Contado                                    

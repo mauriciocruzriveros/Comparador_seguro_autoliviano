@@ -1,0 +1,50 @@
+____________________________________________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': 'No aplica', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR'}
+____________________________________________________________________________________________________
+____________________________________________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 18:54:33
+____________________________________________________________________________________________________
+Elemento ('id', 'Rut') encontrado.
+Elemento ('id', 'Password') encontrado.
+Elemento ('id', 'btnEnviar') encontrado.
+Clic en el elemento realizado correctamente.
+Redireccionando a Particular
+Elemento ('id', 'ifrExternalFrame') encontrado.
+Cambiado al contexto del iframe correctamente.
+Elemento ('class name', 'checkMayorNo') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'RiesgoActual_Asegurado_Persona_Rut') encontrado.
+Elemento ('id', 'btnBuscar') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'RiesgoActual_Asegurado_Persona_Nombre') encontrado.
+Elemento ('id', 'RiesgoActual_Asegurado_Persona_ApellidoPaterno') encontrado.
+Elemento ('id', 'EstadoVehiculoUsado') encontrado.
+Clic en 'Estado Usado' realizado correctamente.
+Elemento ('class name', 'btn-group') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', "//span[@class='k-input' and text()='SELECCIONE MARCA']") encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//li[text()="NISSAN"]') encontrado.
+Clic en el elemento realizado correctamente.
+Se seleccionó la marca deseada 'NISSAN' sin imprimir la lista de modelos.
+____________________________________________________________________________________________________
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', "//span[@class='k-input' and text()='SELECCIONE MODELO']") encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//li[contains(text(), "VERSA")]') encontrado.
+Clic en el elemento realizado correctamente.
+Se seleccionó el modelo deseado 'VERSA' sin imprimir la lista de modelos.
+____________________________________________________________________________________________________
+Elemento ('id', 'Vehiculo_Patente') encontrado.
+Elemento ('id', 'Vehiculo_Ano') encontrado.
+Año '2016' ingresado correctamente.
+Elemento ('id', 'btnCotizar') encontrado.
+Clic en el elemento realizado correctamente.
+Se hizo clic en el botón 'Siguiente' correctamente.
+Elemento ('id', 'ifrExternalFrame') encontrado.
+Cambiado al contexto del iframe correctamente.
+Elemento ('id', 'chkCuota') encontrado.
+Clic en el elemento realizado correctamente.
+Se hizo clic en el radio button 'Valor Cuota' correctamente.
+Clic en el elemento realizado correctamente.
+Se seleccionó '11' en el elemento desplegable correctamente.

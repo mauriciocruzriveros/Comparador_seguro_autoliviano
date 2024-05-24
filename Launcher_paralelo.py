@@ -1,6 +1,7 @@
 import concurrent.futures
 import subprocess
 import os
+import shutil
 
 def limpiar_directorio(ruta):
     try:
@@ -31,7 +32,7 @@ script_sura_path =  os.path.join(directorio_actual, "Scripts", "script_sura.py")
 script_zurich_path = os.path.join(directorio_actual, "Scripts", "script_zurich.py")
 
 #Borrar imagenes
-ruta_imagenes = os.path.join(directorio_actual, ".." , "Imagenes")
+ruta_imagenes = os.path.join(directorio_actual, "Imagenes")
 
 limpiar_directorio(ruta_imagenes)
 

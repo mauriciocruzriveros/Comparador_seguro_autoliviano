@@ -7,10 +7,10 @@ import os
 directorio_actual = os.path.dirname(os.path.abspath(__file__))
 
 # Ruta del archivo de texto
-archivo_datos_liberty = os.path.join(directorio_actual, "..", "Datos", "datos_liberty.txt")
-archivo_datos_rentanacional = os.path.join(directorio_actual, "..", "Datos", "datos_rentanacional.txt")
-archivo_datos_reale = os.path.join(directorio_actual, "..", "Datos", "datos_reale.txt")
-archivo_datos_ans   = os.path.join(directorio_actual, "..", "Datos", "datos_ans.txt")
+archivo_datos_liberty = os.path.join(directorio_actual , 'Datos', 'datos_liberty.txt')
+archivo_datos_rentanacional = os.path.join(directorio_actual, 'Datos', 'datos_rentanacional.txt')
+archivo_datos_reale = os.path.join(directorio_actual, 'Datos', 'datos_reale.txt')
+archivo_datos_ans   = os.path.join(directorio_actual, 'Datos', 'datos_ans.txt')
 
 
 # Función para obtener y guardar los datos

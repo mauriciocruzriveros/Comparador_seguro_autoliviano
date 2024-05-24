@@ -24,7 +24,7 @@ import os
 #Definiciones 
 def esperar_carga_barra(driver):
     try:
-        WebDriverWait(driver, 75).until(
+        WebDriverWait(driver, 50).until(
             EC.text_to_be_present_in_element((By.CLASS_NAME, "percentBarLoaderNum"), "100")
         )
         print("La barra de carga se ha cargado completamente.")
@@ -133,7 +133,7 @@ try:
     ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
     service = Service(executable_path=ruta_chromedriver)
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    #chrome_options.add_argument("--headless")
     driver = webdriver.Chrome(service=service, options=chrome_options)
                               
  # Datos  
@@ -142,7 +142,7 @@ try:
         datos_content = file.read()
         datos = eval(datos_content)
 
-    #Print datos
+    #.. Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
     print("____________________________________________________________________________________________________")
@@ -151,16 +151,18 @@ try:
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
             f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
+    
+    #..Ver Informe
+    print("____________________________________________________________________________________________________")
     print(informe)
     print("____________________________________________________________________________________________________")
 
- 
  # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    # Leer el archivo JSON desde la ruta relativa
+    #. Leer JSON
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
-    # Acceder a los datos
+    #. Acceder a los datos
     email = credentials['email']
     password = credentials['password_ans']
     #.. Página login
@@ -220,9 +222,9 @@ try:
     else:
         print("El elemento RUT_CONTRATANTE no es interactuable.") 
 
+ # Tipo persona : Natural
     if datos["tipo_persona"] == "natural":
-
- # Nombre contratante
+        #.. Nombre contratante
         nombre_persona_locator = (By.ID, "PerAsegurado_Nombres")
         NOMBRE_PERSONA = esperar_elemento(driver, nombre_persona_locator, 1,2,3 )
         NOMBRE_PERSONA.send_keys(datos["nombre_contratante"])
@@ -231,11 +233,12 @@ try:
         APELLIDO_PERSONA_P = esperar_elemento(driver, apellido_persona_p_locator, 1,2,3)
         APELLIDO_PERSONA_P.send_keys(datos["apellido_contratante"])
 
- # Apellido contratante
+        #.. Apellido contratante
         apellido_persona_m_locator = (By.ID, "PerAsegurado_ApellidoMaterno")
         APELLIDO_PERSONA_M = esperar_elemento(driver, apellido_persona_m_locator,1,2,3)
-        APELLIDO_PERSONA_M.send_keys("A")
-   
+        APELLIDO_PERSONA_M.send_keys("V")
+ 
+ #Tipo persona: Jurídica
     else:
         razon_social_locator = (By.ID, "PerAsegurado_RazonSocial")
         RAZON_SOCIAL = esperar_elemento(driver, razon_social_locator,1,2,3)
@@ -258,13 +261,10 @@ try:
         print("Opciones disponibles:")
         for opcion in select_marca_vehiculo.options:
             print(opcion.text)
-            print("____________________________________________________________________________________________________")
-            
+            print("____________________________________________________________________________________________________")    
         opciones_disponibles = [opcion.text for opcion in select_marca_vehiculo.options]
         mejor_coincidencia = max(opciones_disponibles, key=lambda opcion: SequenceMatcher(None, MARCA_DESEADA, opcion).ratio())
-
         select_marca_vehiculo.select_by_visible_text(mejor_coincidencia)
-
         print(f"Se selecciona la mejor coincidencia para '{MARCA_DESEADA}': {mejor_coincidencia}")
         print("____________________________________________________________________________________________________")
       
@@ -322,7 +322,7 @@ try:
         print(opcion.text.strip())
     print("____________________________________________________________________________________________________")
 
- # Comercial
+    #.. Comercial
     if datos["uso_vehiculo"] == "comercial":
         for opcion in opciones_uso_vehiculo:
             if opcion.text.strip() == "Comercial":
@@ -330,7 +330,7 @@ try:
                 print("Se seleccionó la opción Comercial")
                 print("____________________________________________________________________________________________________") 
                 break        
- # Particular
+    #.. Particular
     else:
         for opcion in opciones_uso_vehiculo:
             if opcion.text.strip() == "Particular":
@@ -359,7 +359,7 @@ try:
         select_comuna.select_by_visible_text(mejor_coincidencia)
         print(f"Se selecciono la mejor coincidencia para '{dato_deseado}': {mejor_coincidencia}")
         print("____________________________________________________________________________________________________")
-        
+
  # Checkbox
     cobertura_total_checkbox_locator = (By.ID, "Cobertura_Total_CheckboxSimple")
     cobertura_total_checkbox = esperar_elemento(driver, cobertura_total_checkbox_locator , 1,2,3)
@@ -376,6 +376,7 @@ try:
     tipo_cuotas = esperar_elemento(driver, tipo_cuotas_locator,1,3)
     select_cuotas = Select(tipo_cuotas)
     select_cuotas.select_by_visible_text("11")
+    
     time.sleep(1)
 
  # Cotizar
@@ -385,8 +386,6 @@ try:
     hacer_clic_elemento_con_reintentos_js(driver, elemento_cotizar)     
 
     esperar_carga_barra(driver) 
-
-    time.sleep(2)
 
     try:
             # Busca alerta a cerrar
@@ -407,30 +406,31 @@ try:
     screenshot_path = os.path.join(directorio_actual, '..', 'Imagenes',f'captura_{cliente_nombre}_{timestamp}_ANS.png') 
     driver.save_screenshot(screenshot_path)
 
-# Scrap
-    html = driver.page_source
-    data = []
-    soup = BeautifulSoup(html, 'html.parser')
-    tabla = soup.find('table', {'id': 'grilla-vehiculos'})
-    if tabla:
-        filas = tabla.find_all('tr')
-        for fila in filas:
-            if fila.find(class_="companyProduct") and fila.find(class_="mb-0 d-block ufPrice"):
-                fila_data = [celda.get_text(strip=True) for celda in fila.find_all(['th', 'td'])]
-                data.append(fila_data)
-    # Crear Df
-    df = pd.DataFrame(data)
-    df.columns = ['Nombre de plan', 'S/D', 'UF-3', 'UF-5', 'UF-10','UF-15', 'UF-20','UF-25', 'UF-30']
-         #. Eliminar desde $ en adelante
-    regex = r'\$.*'
-         #. Limpiar Df excepto la primera columna 'Nombre de plan'
-    df.iloc[:, 1:] = df.iloc[:, 1:].replace(regex, '', regex=True)
-         #. Imprimir df
-    print(df)
-
-        # Guardar el DataFrame en un directorio específico
-    ruta_scrap =  os.path.join(directorio_actual, '..', 'Scrap', 'scrap_ans.txt')
-    df.to_csv(ruta_scrap, index=False)
+# # Scrap
+#     html = driver.page_source
+#     data = []
+#     soup = BeautifulSoup(html, 'html.parser')
+#     tabla = soup.find('table', {'id': 'grilla-vehiculos'})
+#     if tabla:
+#         filas = tabla.find_all('tr')
+#         for fila in filas:
+#             if fila.find(class_="companyProduct") and fila.find(class_="mb-0 d-block ufPrice"):
+#                 fila_data = [celda.get_text(strip=True) for celda in fila.find_all(['th', 'td'])]
+#                 data.append(fila_data)
+    
+#     # Crear Df
+#     df = pd.DataFrame(data)
+#     df.columns = ['Nombre de plan', 'S/D', 'UF-3', 'UF-5', 'UF-10','UF-15', 'UF-20','UF-25', 'UF-30']
+#          #. Eliminar desde $ en adelante
+#     regex = r'\$.*'
+#          #. Limpiar Df excepto la primera columna 'Nombre de plan'
+#     df.iloc[:, 1:] = df.iloc[:, 1:].replace(regex, '', regex=True)
+#          #. Imprimir df
+#     print(df)
+    
+#     # Guardar Df
+#     ruta_scrap =  os.path.join(directorio_actual, '..', 'Scrap', 'scrap_ans.csv')
+#     df.to_csv(ruta_scrap, index=False)
    
 except Exception as e:
    # Registrar cualquier excepción que pueda ocurrir
@@ -443,6 +443,3 @@ sys.stdout = sys.__stdout__
 sys.stderr = sys.__stderr__
 
 driver.quit()
-
-
-

@@ -1,0 +1,60 @@
+____________________________________________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': 'No aplica', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR'}
+____________________________________________________________________________________________________
+____________________________________________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 02:36:57
+____________________________________________________________________________________________________
+Elemento ('id', 'login-login-button') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'email') encontrado.
+Elemento ('id', 'password') encontrado.
+El spinner 'p-progress-spinner-circle' ha desaparecido, la página ha cargado completamente.
+Elemento ('xpath', '//span[contains(text(), "Vehículos Livianos")]') no encontrado. Intento 1/5. Selector: ('xpath', '//span[contains(text(), "Vehículos Livianos")]')
+Elemento ('xpath', '//span[contains(text(), "Vehículos Livianos")]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'iframe-render') encontrado.
+El spinner 'p-progress-spinner-circle' ha desaparecido, la página ha cargado completamente.
+Elemento ('id', 'PerAsegurado_PersonalidadJuridicaID') encontrado.
+Elemento ('id', 'PerAsegurado_Identificacion') encontrado.
+Elemento interactuable encontrado.
+Elemento ('id', 'PerAsegurado_Nombres') encontrado.
+Elemento ('id', 'PerAsegurado_ApellidoPaterno') encontrado.
+Elemento ('id', 'PerAsegurado_ApellidoMaterno') encontrado.
+Elemento ('id', 'MarcaVehiculos') encontrado.
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+No se pudo hacer click en el elemento <selenium.webdriver.remote.webelement.WebElement (session="c509aa3a43d932c20144f42d8d83ee86", element="f.E1008BEFDF6057E9927F27A92126853A.d.EC4FAB1F63260A10AFD3BAA10AF35D4D.e.118")> después de 3 intentos.
+Se seleccionó la marca deseada :NISSAN sin printear la lista de opciones
+____________________________________________________________________________________________________
+Elemento ('id', 'ModeloVehiculos') encontrado.
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+No se pudo hacer click en el elemento <selenium.webdriver.remote.webelement.WebElement (session="c509aa3a43d932c20144f42d8d83ee86", element="f.E1008BEFDF6057E9927F27A92126853A.d.EC4FAB1F63260A10AFD3BAA10AF35D4D.e.119")> después de 3 intentos.
+Se selecciono el modelo deseado VERSA sin printear la lista de modelos
+____________________________________________________________________________________________________
+Elemento ('id', 'A_o_vehiculo_livianos_TablaSimple_Entero') encontrado.
+Se selecciono el ano deseado 2016 sin printear la lista de anos
+____________________________________________________________________________________________________
+Elemento ('id', 'select2-uso_vehiculo_TablaSimple_Texto-container') encontrado.
+Clic en el elemento realizado correctamente.
+Seleccione...
+Particular
+Comercial
+____________________________________________________________________________________________________
+Se seleccionó la opción Particular
+____________________________________________________________________________________________________
+Elemento ('id', 'Comuna') encontrado.
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+Error: ElementClickInterceptedException. Volviendo a intentar...
+No se pudo hacer click en el elemento <selenium.webdriver.remote.webelement.WebElement (session="c509aa3a43d932c20144f42d8d83ee86", element="f.E1008BEFDF6057E9927F27A92126853A.d.EC4FAB1F63260A10AFD3BAA10AF35D4D.e.122")> después de 3 intentos.
+Se selecciono el comuna deseado VIÑA DEL MAR sin printear la lista de comunas
+____________________________________________________________________________________________________
+Elemento ('id', 'Cobertura_Total_CheckboxSimple') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'TipoMedioPago') encontrado.
+Elemento ('id', 'Cuotas') encontrado.
+Clic en el elemento realizado correctamente.
+La barra de carga se ha cargado completamente.

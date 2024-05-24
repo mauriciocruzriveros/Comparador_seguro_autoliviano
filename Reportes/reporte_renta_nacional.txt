@@ -1,0 +1,94 @@
+_____________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': 'No aplica', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR - VALPARAÍSO', 'modelo_rentanacional': 'VERSA', 'marca_rentanacional': 'NISSAN'}
+_____________________________________________________________________
+_____________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 02:34:23
+_____________________________________________________________________
+Elemento ('id', 'rutInput') encontrado.
+Elemento ('id', 'passwordInput') encontrado.
+El spinner ha desaparecido, la página ha cargado completamente.
+El spinner ha desaparecido, la página ha cargado completamente.
+Elemento ('css selector', 'label[for="adminSwitchContratante"]') encontrado.
+Elemento ('id', 'rut-contratante') encontrado.
+Elemento ('id', 'nombreContratante') encontrado.
+Elemento ('id', 'apellidoContratante1') encontrado.
+El elemento aún está habilitado. Intento 2/5
+El elemento aún está habilitado. Intento 3/5
+El elemento aún está habilitado. Intento 4/5
+El elemento aún está habilitado. Intento 5/5
+No se pudo verificar el estado del elemento después de 5 intentos.
+La caja de texto sigue habilitada después de varios intentos.
+Elemento ('css selector', 'label[for="materiaAsegurarSwitch"]') encontrado.
+Elemento ('id', 'patenteUsado') encontrado.
+Elemento ('id', 'montoRC') encontrado.
+Clic en el elemento realizado correctamente.
+El spinner ha desaparecido, la página ha cargado completamente.
+Error: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=125.0.6422.113)
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797AFD5A5]
+	(No symbol) [0x00007FF797BA36B7]
+	(No symbol) [0x00007FF797BBB331]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+Traceback (most recent call last):
+  File "c:\Users\mauri\Desktop\App Autos Livianos\Scripts\script_rentanacional.py", line 326, in <module>
+    MODELO = esperar_elemento(driver, select_modelo_locator, 1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\mauri\Desktop\App Autos Livianos\Scripts\script_rentanacional.py", line 63, in esperar_elemento
+    elemento = WebDriverWait(driver, 10).until(condicion(locator))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\support\wait.py", line 92, in until
+    value = method(self._driver)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\support\expected_conditions.py", line 80, in _predicate
+    return driver.find_element(*locator)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 741, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 347, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 229, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchWindowException: Message: no such window: target window already closed
+from unknown error: web view not found
+  (Session info: chrome=125.0.6422.113)
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797AFD5A5]
+	(No symbol) [0x00007FF797BA36B7]
+	(No symbol) [0x00007FF797BBB331]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+

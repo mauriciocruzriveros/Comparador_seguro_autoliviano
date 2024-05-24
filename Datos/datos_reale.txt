@@ -1,0 +1,1 @@
+{"tipo_vehiculo": "particular", "tipo_persona": "natural", "rut": "202087000", "nombre_contratante": "Christian", "apellido_contratante": "Jara", "uso_vehiculo": "usado", "patente": "HPPL93", "marca": "NISSAN", "modelo": "VERSA", "ano": "2016", "rubro": "No aplica", "estilo_vehiculo": "SEDAN", "comuna": "VIÑA DEL MAR - VALPARAÍSO"}

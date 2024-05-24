@@ -1,0 +1,134 @@
+____________________________________________________________________________
+{'tipo_vehiculo': 'particular', 'tipo_persona': 'natural', 'rut': '202087000', 'nombre_contratante': 'Christian', 'apellido_contratante': 'Jara', 'uso_vehiculo': 'usado', 'patente': 'HPPL93', 'marca': 'NISSAN', 'modelo': 'VERSA', 'ano': '2016', 'rubro': '', 'estilo_vehiculo': 'SEDAN', 'comuna': 'VIÑA DEL MAR - VALPARAÍSO', 'marca_liberty': 'NISSAN'}
+____________________________________________________________________________
+____________________________________________________________________________
+Informe - Cliente: Christian, Apellido: Jara, Patente: HPPL93, Fecha: 2024-05-24 02:42:03
+____________________________________________________________________________
+Elemento ('class name', 'nomUsuario') encontrado.
+Elemento ('id', 'j_password') encontrado.
+Elemento ('xpath', "//div[@id='bot1']//a[@id='10']") encontrado.
+Clic en el elemento realizado correctamente.
+Error al esperar la página cargada: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27EBA]
+	(No symbol) [0x00007FF797B77676]
+	(No symbol) [0x00007FF797B7773C]
+	(No symbol) [0x00007FF797BBE967]
+	(No symbol) [0x00007FF797B9C25F]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+Elemento ('xpath', "//button[.//span[contains(@class, 'MuiButton-label')]//div//p[text()='Livianos']]") encontrado.
+Clic en el elemento realizado correctamente.
+____________________________________________________________________________
+La página está cargada
+Elemento ('class name', 'MuiIconButton-label') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'rut') encontrado.
+La página está cargada
+Elemento ('id', 'name') encontrado.
+La página está cargada
+Elemento ('id', 'lastname') encontrado.
+La página está cargada
+La página está cargada
+Elemento ('id', 'email') encontrado.
+La página está cargada
+Elemento ('id', 'phone') encontrado.
+La página está cargada
+Elemento ('xpath', '//input[@name="samedata" and @value="si"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//input[@name="susQuestions[0].question" and @value="no"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//input[@name="susQuestions[1].question" and @value="no"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//input[@name="newVehicle" and @value="no"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'mui-component-select-vehUse') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', '//li[@data-value="1"]') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('id', 'plate') encontrado.
+Clic en el elemento realizado correctamente.
+Elemento ('xpath', "//div[@id='mui-component-select-vehBrand']") encontrado.
+La página está cargada
+Error: Message: element not interactable
+  (Session info: chrome=125.0.6422.113)
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27CE9]
+	(No symbol) [0x00007FF797B789C2]
+	(No symbol) [0x00007FF797B6B491]
+	(No symbol) [0x00007FF797B9C21A]
+	(No symbol) [0x00007FF797B6ADB6]
+	(No symbol) [0x00007FF797B9C430]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+Traceback (most recent call last):
+  File "c:\Users\mauri\Desktop\App Autos Livianos\Scripts\script_liberty.py", line 296, in <module>
+    hacer_clic_elemento_con_reintentos(driver, element_marca)
+  File "c:\Users\mauri\Desktop\App Autos Livianos\Scripts\script_liberty.py", line 64, in hacer_clic_elemento_con_reintentos
+    elemento.click()
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 93, in click
+    self._execute(Command.CLICK_ELEMENT)
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webelement.py", line 394, in _execute
+    return self._parent.execute(command, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\webdriver.py", line 347, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\mauri\AppData\Local\Programs\Python\Python312\Lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 229, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable
+  (Session info: chrome=125.0.6422.113)
+Stacktrace:
+	GetHandleVerifier [0x00007FF797CF1F22+60322]
+	(No symbol) [0x00007FF797C6CE99]
+	(No symbol) [0x00007FF797B27CE9]
+	(No symbol) [0x00007FF797B789C2]
+	(No symbol) [0x00007FF797B6B491]
+	(No symbol) [0x00007FF797B9C21A]
+	(No symbol) [0x00007FF797B6ADB6]
+	(No symbol) [0x00007FF797B9C430]
+	(No symbol) [0x00007FF797BBBC80]
+	(No symbol) [0x00007FF797B9BFC3]
+	(No symbol) [0x00007FF797B69617]
+	(No symbol) [0x00007FF797B6A211]
+	GetHandleVerifier [0x00007FF79800946D+3301613]
+	GetHandleVerifier [0x00007FF798053693+3605267]
+	GetHandleVerifier [0x00007FF798049410+3563664]
+	GetHandleVerifier [0x00007FF797DA42F6+790390]
+	(No symbol) [0x00007FF797C774DF]
+	(No symbol) [0x00007FF797C733D4]
+	(No symbol) [0x00007FF797C73562]
+	(No symbol) [0x00007FF797C62F6F]
+	BaseThreadInitThunk [0x00007FF9EA40257D+29]
+	RtlUserThreadStart [0x00007FF9EA74AA48+40]
+
+

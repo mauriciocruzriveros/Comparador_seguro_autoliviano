@@ -1,0 +1,1 @@
+{"tipo_vehiculo": "particular", "tipo_persona": "natural", "rut": "82179291", "nombre_contratante": "Evangelina", "apellido_contratante": "Ramos", "uso_vehiculo": "nuevo", "patente": "PBWT50", "marca": "AUDI", "modelo": "A4", "ano": "2023"}

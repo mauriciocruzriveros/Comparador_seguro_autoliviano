@@ -3,6 +3,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -10,12 +11,15 @@ from difflib import get_close_matches
 from difflib import SequenceMatcher
 from selenium import webdriver
 from datetime import datetime
+from bs4 import BeautifulSoup
+import pandas as pd
 import traceback
 import logging
 import json
 import time
 import sys
 import os
+import re
 
 def esperar_elemento(driver, locator, *numeros_condiciones, max_intentos=5):
         # Define las condiciones de espera y sus códigos
@@ -85,14 +89,18 @@ sys.stderr = open(log_file_path, 'w')
 
 try:
  # Ruta de chromedriver
-    service = Service(executable_path=os.path.join(directorio_actual, '..','chromedriver.exe'))
-    driver = webdriver.Chrome(service=service)
+    ruta_chromedriver = os.path.join(directorio_actual, '..', 'chromedriver.exe')   
+    service = Service(executable_path=os.path.join(directorio_actual,"..", "chromedriver.exe"))
+    chrome_options = Options()
+    #chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(service=service, options=chrome_options)
 
  # Datos
     datos_file_path = os.path.join(directorio_actual, '..','Datos', "datos_ans.txt")
     with open(datos_file_path, 'r', encoding='utf-8') as file:
         datos_content = file.read()
         datos = eval(datos_content)
+    
     # Ver datos
     print("____________________________________________________________________________________________________")
     print(datos)
@@ -102,6 +110,8 @@ try:
     fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     informe = f"Informe - Cliente: {datos['nombre_contratante']}, Apellido: {datos['apellido_contratante']}, " \
             f"Patente: {datos['patente']}, Fecha: {fecha_actual}"
+    #.Ver Informe
+    print("____________________________________________________________________________________________________")
     print(informe)
     print("____________________________________________________________________________________________________")
     
@@ -110,50 +120,46 @@ try:
     
 # Credenciales
     ruta_credenciales = os.path.join(directorio_actual, '..','credenciales.json')
-    # Leer el archivo JSON desde la ruta relativa
+    # Leer JSON
     with open(ruta_credenciales, 'r') as file:
         credentials = json.load(file)
-    # Acceder a los datos
     rut = credentials['rut_sura']
     password = credentials['password_sura']
-
- # Botón Rut
+    # Rut
     BOTON_LOGIN_locator = (By.ID, "Rut")
     BOTON_LOGIN = esperar_elemento(driver, BOTON_LOGIN_locator, 1, 2, 3, max_intentos=3)
     for digito in rut:
-        BOTON_LOGIN.send_keys(digito)
-    
- # Botón Pass
+        BOTON_LOGIN.send_keys(digito) 
+    # Password
     BOTON_PASS_locator = (By.ID, "Password")
     BOTON_PASS = esperar_elemento(driver, BOTON_PASS_locator, 1, 2, 3, max_intentos=10)
     BOTON_PASS.send_keys(password)
- 
- # Botón Enviar
+    # Botón Enviar
     BOTON_ENVIAR_locator = (By.ID, "btnEnviar")
     BOTON_ENVIAR = esperar_elemento(driver, BOTON_ENVIAR_locator, 1, 2, 3, max_intentos=10)
     if BOTON_ENVIAR:
         hacer_clic_elemento_con_reintentos(driver, BOTON_ENVIAR)
     else:
         print(f"No se pudo encontrar {BOTON_ENVIAR_locator}.")
- 
     # Esperar pagina
     elemento_esperado = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "menu"))
     )
 
-# Particular
+ #Vehiculo particular/comercial:
+    #.. Vehiculo : Particular
     if datos["tipo_vehiculo"] == "particular":
         driver.get("https://seguros.sura.cl/sucursal-virtual/corredor/venta/movilidad/autoclickanual/cotizar/particular-cotizar")
         tipo_vehiculo_parametro = "particular"
         print("Redireccionando a Particular")
 
-# Comercial
+    #.. Vehiculo : Comercial
     else:
         driver.get("https://seguros.sura.cl/sucursal-virtual/corredor/venta/movilidad/autoclickanual/cotizar/comercial-cotizar")
         tipo_vehiculo_parametro = "comercial"
         print("Redireccionando a Comercial") 
 
-    # Cambiar iframe
+ # Cambiar iframe
     iframe_locator = (By.ID, "ifrExternalFrame")
     iframe_element = esperar_elemento(driver, iframe_locator, 1, max_intentos=5)
     if iframe_element:
@@ -179,37 +185,44 @@ try:
     BOTON_BUSCAR = esperar_elemento(driver, boton_buscar_locator,1,2,3)
     hacer_clic_elemento_con_reintentos(driver,BOTON_BUSCAR)
 
- # Persona Natural
-    if datos["tipo_persona"] == "natural":
-    # Nombre
+ #Persona natural/jurídica
+    #.. Persona Natural
+    if datos["tipo_persona"] == "natural": 
+        #... Nombre
         elemento_nombre_locator = (By.ID, 'RiesgoActual_Asegurado_Persona_Nombre')
         elemento_nombre = esperar_elemento(driver, elemento_nombre_locator, 1, 2, 3, max_intentos=3)
         if elemento_nombre.is_enabled():
-            elemento_nombre.send_keys(Keys.CONTROL + "a")
+            time.sleep(2)
+            # elemento_nombre.send_keys(Keys.CONTROL + "a")
+            elemento_nombre.clear()
             elemento_nombre.send_keys(datos["nombre_contratante"]) 
         else:
             print(f"No se pudo encontrar {elemento_nombre_locator}")
-
- # Apellido
+       
+        #... Apellido
         elemento_apellido_paterno_locator = (By.ID, 'RiesgoActual_Asegurado_Persona_ApellidoPaterno')
         elemento_apellido_paterno = esperar_elemento(driver, elemento_apellido_paterno_locator, 1, 2, 3, max_intentos=3)
         if elemento_apellido_paterno.is_enabled():
+            elemento_apellido_paterno.clear()
             elemento_apellido_paterno.send_keys(datos["apellido_contratante"])  
         else:
             print(f"No se pudo encontrar {elemento_apellido_paterno_locator}")
-
+    
+    #.. Persona Jurídica
     else:
         razon_social_locator = (By.ID, "RiesgoActual_Asegurado_Persona_NombreCompleto")
         RAZON_SOCIAL = esperar_elemento(driver, razon_social_locator,1,2,3)
-       
         if RAZON_SOCIAL.is_enabled():
+
             time.sleep(2)
+
             RAZON_SOCIAL.clear()
             RAZON_SOCIAL.send_keys(datos["nombre_contratante"]) 
         else:
             pass
 
- # Vehiculo nuevo
+ # Vehiculo nuevo/usado
+    #.. Vehiculo : Nuevo
     if datos["uso_vehiculo"] == "nuevo":
         elemento_estado_nuevo_locator = (By.ID, 'EstadoVehiculoNuevo')
         elemento_estado_nuevo = esperar_elemento(driver, elemento_estado_nuevo_locator, 1, 2, 3, max_intentos=3)
@@ -221,7 +234,8 @@ try:
     
         actions = ActionChains(driver)
         actions.send_keys('\ue00C').perform()
-
+    
+    #.. Vehículo : Usado
     else:
         elemento_estado_usado_locator = (By.ID, 'EstadoVehiculoUsado')
         elemento_estado_usado = esperar_elemento(driver, elemento_estado_usado_locator, 1, 2, 3, max_intentos=3)
@@ -229,7 +243,7 @@ try:
             driver.execute_script("arguments[0].click();", elemento_estado_usado)
             print("Clic en 'Estado Usado' realizado correctamente.")
 
-            #Alerta 
+            #...Alerta 
             alerta_locator = (By.CLASS_NAME, "btn-group")
             ALERTA = esperar_elemento(driver, alerta_locator, 1,2,3)
             hacer_clic_elemento_con_reintentos_js(driver, ALERTA)
@@ -256,15 +270,13 @@ try:
         lista_marca_locator = (By.XPATH, "//ul[@id='Vehiculo_MarcaID_listbox']")
         lista_desplegable = esperar_elemento(driver, lista_marca_locator, 1)
         opciones_disponibles = lista_desplegable.find_elements(By.XPATH, "//li[@role='option']")
-
-        # Filtrar las opciones para eliminar "SELECCIONE MODELO" y líneas vacías
+        
+        # Filtrar 
         opciones_filtradas = [opcion for opcion in opciones_disponibles if opcion.text.strip() and opcion.text.strip() != 'SELECCIONE MODELO']
         opciones_texto_filtrado = [opcion.text.strip() for opcion in opciones_filtradas]
-
         print("Opciones disponibles:")
         for opcion in opciones_texto_filtrado:
             print(opcion)
-
         mejor_coincidencia = max(opciones_texto_filtrado, key=lambda opcion: SequenceMatcher(None, marca_sura_valor, opcion).ratio())
         driver.execute_script("arguments[0].click();", [opcion for opcion in opciones_filtradas if opcion.text.strip() == mejor_coincidencia][0])
         print(f"Se seleccionó la mejor coincidencia para '{marca_sura_valor}': {mejor_coincidencia}")
@@ -291,7 +303,7 @@ try:
         lista_desplegable_modelo = esperar_elemento(driver, lista_modelo_locator, 1)
         opciones_disponibles_modelo = lista_desplegable_modelo.find_elements(By.XPATH, "//li[@role='option']")
 
-        # Filtrar las opciones para eliminar "SELECCIONE MODELO" y líneas vacías
+        # Filtrar 
         opciones_filtradas_modelo = [opcion_modelo for opcion_modelo in opciones_disponibles_modelo if opcion_modelo.text.strip() and opcion_modelo.text.strip() != 'SELECCIONE MODELO']
         opciones_texto_filtrado_modelo = [opcion_modelo.text.strip() for opcion_modelo in opciones_filtradas_modelo]
 
@@ -355,7 +367,7 @@ try:
     else:
         print(f"No se pudo encontrar el radio button 'Valor Cuota' con el locator {radio_cuota_locator}.")  
     
-    # Opcion 11
+    #.. Opcion 11
     option_11 = driver.find_element(By.XPATH, "//li[text()='11']")
     hacer_clic_elemento_con_reintentos_js(driver, option_11, 5)
     print("Se seleccionó '11' en el elemento desplegable correctamente.")
@@ -365,8 +377,39 @@ try:
     cliente_nombre = datos['nombre_contratante']  
     screenshot_path = os.path.join(directorio_actual, '..','Imagenes', f"captura_{cliente_nombre}_{timestamp}_sura.png")
     driver.save_screenshot(screenshot_path)
-    
 
+# # Scrap
+#     data = []
+#     html = driver.page_source
+#     soup = BeautifulSoup(html, 'html.parser')
+#     listas = soup.find_all('ul', class_=re.compile(r'caja-planes\d-pago'))
+#     #. Iteramos sobre las 4 listas
+#     for i, lista in enumerate(listas, 1):
+#         # Creamos un diccionario para almacenar los datos de esta lista
+#         fila = {'Nombre Plan': f'Plan {i}'}
+#         elementos = lista.find_all('li')
+#         for j, elemento in enumerate(elementos, 1):
+#             fila[f'D{j}'] = elemento.text.strip()
+#         data.append(fila)
+#         if i ==4:
+#             break
+#     #. Crear Df
+#     df = pd.DataFrame(data)
+#     df.columns = ['Nombre Plan', 'SD', 'D3', 'D5', 'D10', 'D20', 'D50']
+#     #. Cambiar los nombres de los planes
+#     df['Nombre Plan'] = df['Nombre Plan'].replace({'Plan 1': 'PT + RC'})
+#     df['Nombre Plan'] = df['Nombre Plan'].replace({'Plan 2': 'Classic'})
+#     df['Nombre Plan'] = df['Nombre Plan'].replace({'Plan 3': 'Full'})
+#     df['Nombre Plan'] = df['Nombre Plan'].replace({'Plan 4': 'Premium'})
+#     #. Eliminar el nombre de la columna del valor para cada columna
+#     for columna in df.columns[1:]:  # Ignoramos la primera columna 'Nombre Plan'
+#         df[columna] = df[columna].apply(lambda x: x.replace(columna, '') if x.startswith(columna) else x)
+#     # Mostrar Df
+#     print(df)
+#     # Guardar Df
+#     ruta_scrap = os.path.join(directorio_actual, '..', 'Scrap', 'scrap_sura.csv')
+#     df.to_csv(ruta_scrap, index=False)
+    
 except Exception as e:
     # Registrar cualquier excepción que pueda ocurrir
     print(f"Error: {str(e)}")
